@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>{ const q = new URLSearchParams(location.search), d = document.documentElement;
+  if (q.has('static')) d.dataset.static = '';
+  if (q.has('reduce') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.dataset.motion = 'reduce';
+  try { const t = localStorage.getItem('nr-theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {} }
+/* every external link in one place: change the site URL here when the Netlify name is final */
+window.LINKS = { site: 'https://neelmayank-rawat.netlify.app', github: 'https://github.com/rawatneelmayank1-sire', linkedin: 'https://www.linkedin.com/in/neelmayank-rawat-028886355/',
+  email: 'mailto:rawatneelmayank1@gmail.com', repo: name => 'https://github.com/rawatneelmayank1-sire/' + name };</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leftover Item Detection, case study</title>
+<meta name="description" content="Leftover Item Detection: Real-time detection of items left behind in classrooms, with priority-sorted Telegram alerts to faculty.">
+<meta name="theme-color" content="#EEF0F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://neelmayank-rawat.netlify.app/work/leftover-item-detection/">
+<meta property="og:type" content="website"><meta property="og:title" content="Leftover Item Detection, case study"><meta property="og:description" content="Leftover Item Detection: Real-time detection of items left behind in classrooms, with priority-sorted Telegram alerts to faculty."><meta property="og:url" content="https://neelmayank-rawat.netlify.app/work/leftover-item-detection/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A1D24'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C4472B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="/assets/css/site.9c5d8f7a8e.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" aria-label="Site"><div class="nav">
+  <a class="brand" href="/">Neelmayank Rawat</a>
+  <nav class="nav__links" aria-label="Sections"><a href="/#work">Work</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+  <div class="nav__end">
+    <button class="icon-btn pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><i class="ph ph-pause" aria-hidden="true"></i><span class="vh">Pause motion</span></button>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch theme"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn--solid magnetic" href="mailto:rawatneelmayank1@gmail.com" data-link="email" style="padding:0 20px">Email me</a>
+  </div>
+</div></header>
+<main id="main">
+  <header class="case-head">
+    <canvas aria-hidden="true" data-shape="room"></canvas>
+    <div class="wrap case-head__in">
+      <p class="crumb load-in" style="--i:0"><a href="/#w-leftover-item-detection"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a><span aria-hidden="true">/</span><span>Computer vision</span></p>
+      <h1 class="case-title" style="view-transition-name: t-leftover-item-detection">Leftover Item Detection</h1>
+      <p class="case-line load-in" style="--i:2">Real-time detection of items left behind in classrooms, with priority-sorted Telegram alerts to faculty.</p>
+      <div class="case-cta load-in" style="--i:3"><span class="na">Code not public</span><a class="btn magnetic" href="#b-problem">Skip to the problem</a></div>
+    </div>
+  </header>
+  <div class="wrap case-body">
+    <section class="block" aria-labelledby="b-problem"><h2 id="b-problem" class="split">Problem</h2><div class="prose"><p>Items left behind in a classroom are easy to miss once a lecture ends. This project watches the room and tells faculty.</p></div></section><section class="block" aria-labelledby="b-does"><h2 id="b-does" class="split">What it does</h2><div><ul class="bullets"><li>Detects objects in the classroom camera feed in real time with YOLOv5 and OpenCV.</li><li>Sends Telegram alerts to faculty when an item is left behind.</li><li>Sorts alerts into priority-based categories.</li></ul></div></section><section class="block" aria-labelledby="b-how"><h2 id="b-how" class="split">How it works</h2><div><ol class="steps"><li><div><b>Watch</b><p>Frames from the classroom camera are read with OpenCV.</p></div></li><li><div><b>Detect</b><p>YOLOv5 finds objects in each frame.</p></div></li><li><div><b>Alert</b><p>Items left behind trigger a Telegram message to faculty, sorted by priority.</p></div></li></ol></div></section><section class="block" aria-labelledby="b-res"><h2 id="b-res" class="split">Results</h2><div><p class="caveat">The code for this project is not public, so this page lists no metrics and no repository.</p></div></section><section class="block" aria-labelledby="b-stack"><h2 id="b-stack" class="split">Stack</h2><div><ul class="tags"><li>Python</li><li>YOLOv5</li><li>OpenCV</li><li>Telegram API</li></ul><div class="case-cta"><span class="na">Code not public</span></div></div></section>
+    <a class="next" href="/work/truthlens/" data-case-link><small>Next project</small><b>TruthLens</b><span class="link">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></span></a>
+  </div>
+</main>
+<footer class="wrap"><div class="foot"><span>Neelmayank Rawat. B.Tech in Computer Science and Engineering, RCOEM Nagpur, 2023 to 2027.</span>
+<span><a href="https://github.com/rawatneelmayank1-sire" data-link="github">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/neelmayank-rawat-028886355/" data-link="linkedin">LinkedIn</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script><script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/js/site.2656d6d058.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">import { createField } from '/assets/js/field.645b8db74f.js';
+const host = document.querySelector('.case-head'), cv = host && host.querySelector('canvas');
+try { if (cv) { window.NR = window.NR || {}; NR.field = await createField({ canvas: cv, mode: 'single', shape: cv.dataset.shape, side: 'right', host }); } }
+catch (e) { document.documentElement.classList.add('no-gl'); }</script>
+</body>
+</html>

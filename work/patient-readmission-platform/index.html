@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>{ const q = new URLSearchParams(location.search), d = document.documentElement;
+  if (q.has('static')) d.dataset.static = '';
+  if (q.has('reduce') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.dataset.motion = 'reduce';
+  try { const t = localStorage.getItem('nr-theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {} }
+/* every external link in one place: change the site URL here when the Netlify name is final */
+window.LINKS = { site: 'https://neelmayank-rawat.netlify.app', github: 'https://github.com/rawatneelmayank1-sire', linkedin: 'https://www.linkedin.com/in/neelmayank-rawat-028886355/',
+  email: 'mailto:rawatneelmayank1@gmail.com', repo: name => 'https://github.com/rawatneelmayank1-sire/' + name };</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Patient Readmission Risk, case study</title>
+<meta name="description" content="Patient Readmission Risk: A leakage-free model predicting which diabetic patients return to hospital within 30 days.">
+<meta name="theme-color" content="#EEF0F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://neelmayank-rawat.netlify.app/work/patient-readmission-platform/">
+<meta property="og:type" content="website"><meta property="og:title" content="Patient Readmission Risk, case study"><meta property="og:description" content="Patient Readmission Risk: A leakage-free model predicting which diabetic patients return to hospital within 30 days."><meta property="og:url" content="https://neelmayank-rawat.netlify.app/work/patient-readmission-platform/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A1D24'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C4472B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="/assets/css/site.9c5d8f7a8e.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" aria-label="Site"><div class="nav">
+  <a class="brand" href="/">Neelmayank Rawat</a>
+  <nav class="nav__links" aria-label="Sections"><a href="/#work">Work</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+  <div class="nav__end">
+    <button class="icon-btn pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><i class="ph ph-pause" aria-hidden="true"></i><span class="vh">Pause motion</span></button>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch theme"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn--solid magnetic" href="mailto:rawatneelmayank1@gmail.com" data-link="email" style="padding:0 20px">Email me</a>
+  </div>
+</div></header>
+<main id="main">
+  <header class="case-head">
+    <canvas aria-hidden="true" data-shape="roc"></canvas>
+    <div class="wrap case-head__in">
+      <p class="crumb load-in" style="--i:0"><a href="/#w-patient-readmission-platform"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a><span aria-hidden="true">/</span><span>Machine learning</span></p>
+      <h1 class="case-title" style="view-transition-name: t-patient-readmission-platform">Patient Readmission Risk</h1>
+      <p class="case-line load-in" style="--i:2">A leakage-free model predicting which diabetic patients return to hospital within 30 days.</p>
+      <div class="case-cta load-in" style="--i:3"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/patient-readmission-platform" data-repo="patient-readmission-platform">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a><a class="btn magnetic" href="#b-problem">Skip to the problem</a></div>
+    </div>
+  </header>
+  <div class="wrap case-body">
+    <section class="block" aria-labelledby="b-problem"><h2 id="b-problem" class="split">Problem</h2><div class="prose"><p>Many readmission demos split by encounter, so the same patient leaks into the test set. Scores then look better than they really are.</p></div></section><section class="block" aria-labelledby="b-does"><h2 id="b-does" class="split">What it does</h2><div><ul class="bullets"><li>Cleans 101,766 hospital encounters into a cohort of 69,990 patients.</li><li>Splits by patient so nobody appears in both training and test data.</li><li>Trains logistic regression and gradient boosting, then calibrates both risk scores.</li><li>Reports metrics with confidence intervals and recall by age, gender and race.</li><li>Serves the calibrated model through a FastAPI predict endpoint.</li></ul></div></section><section class="block wide" aria-labelledby="b-arch"><h2 id="b-arch" class="split">Architecture</h2><div><p class=dia-note>A Python package with a command-line entry point and make targets for data, train, evaluate and serve. The FastAPI service returns a calibrated risk, a flag, the threshold and the model version.</p><div class="dia-wrap" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1017px" viewBox="14 10 1017 479" role="img" lang="en" aria-labelledby="d1-archify-diagram-title d1-archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
+        <title id="d1-archify-diagram-title">Readmission risk system overview</title>
+        <desc id="d1-archify-diagram-description">Numbered training path: 1 UCI CSV into preprocessing, 2 69,990 patient rows into the patient split, 3 70 and 15 percent sets into train and calibrate, 4 joblib model bundle, 5 evaluate loads the bundle, 6 writes reports from the 15 percent test patients. Serving: P1 an API client POSTs an encounter to FastAPI, P2 FastAPI calls predict_proba on the bundle.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d1-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d1-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d1-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d1-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d1-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Boundaries (behind everything) -->
+
+
+        <!-- Connection paths (before components for correct z-order) -->
+        <g data-graph-role="automatic-crossover" style="--step:0">
+          <path data-graph-role="automatic-crossover-underlay" d="M 200 70 L 300 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="uci" data-edge-to="prep" data-edge-label="1 CSV" data-edge-key="0" data-edge-id="c1" data-composition-points="200,70;300,70" data-composition-crossover="halo" data-composition-independent="true" d="M 200 70 L 300 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:1">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 70 L 570 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="prep" data-edge-to="feat" data-edge-label="2 69,990 rows" data-edge-key="1" data-edge-id="c2" data-composition-points="470,70;570,70" data-composition-crossover="halo" data-composition-independent="true" d="M 470 70 L 570 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:2">
+          <path data-graph-role="automatic-crossover-underlay" d="M 740 70 L 840 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="feat" data-edge-to="train" data-edge-label="3 70 / 15" data-edge-key="2" data-edge-id="c3" data-composition-points="740,70;840,70" data-composition-crossover="halo" data-composition-independent="true" d="M 740 70 L 840 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:3">
+          <path data-graph-role="automatic-crossover-underlay" d="M 925 100 L 925 200" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="train" data-edge-to="model" data-edge-label="4 joblib" data-edge-key="3" data-edge-id="c4" data-composition-points="925,100;925,200" data-composition-crossover="halo" data-composition-independent="true" d="M 925 100 L 925 200" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:4">
+          <path data-graph-role="automatic-crossover-underlay" d="M 840 230 L 740 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="model" data-edge-to="eval" data-edge-label="5 load" data-edge-key="4" data-edge-id="c5" data-composition-points="840,230;740,230" data-composition-crossover="halo" data-composition-independent="true" d="M 840 230 L 740 230" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:5">
+          <path data-graph-role="automatic-crossover-underlay" d="M 570 230 L 470 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="eval" data-edge-to="reports" data-edge-label="6 test 15%" data-edge-key="5" data-edge-id="c6" data-composition-points="570,230;470,230" data-composition-crossover="halo" data-composition-independent="true" d="M 570 230 L 470 230" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:6">
+          <path data-graph-role="automatic-crossover-underlay" d="M 740 390 L 840 390" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="client" data-edge-to="api" data-edge-label="P1 POST" data-edge-key="6" data-edge-id="c7" data-composition-points="740,390;840,390" data-composition-crossover="halo" data-composition-independent="true" d="M 740 390 L 840 390" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:7">
+          <path data-graph-role="automatic-crossover-underlay" d="M 925 360 L 925 260" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="api" data-edge-to="model" data-edge-label="P2 predict_proba" data-edge-key="7" data-edge-id="c8" data-composition-points="925,360;925,260" data-composition-crossover="halo" data-composition-independent="true" d="M 925 360 L 925 260" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+
+        <!-- Components -->
+        <g id="d1-node-uci" data-node-id="uci" data-node-label="UCI dataset" aria-label="Focus UCI dataset, 101,766 encounters, Architecture component" data-node-kind="external" data-node-sublabel="101,766 encounters" data-node-context="Architecture component">
+          <title>UCI dataset · 101,766 encounters · Architecture component</title>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(36 46) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="115" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">UCI dataset</text>
+        <text data-detail="context" x="115" y="84" class="t-muted" font-size="12" text-anchor="middle">101,766 encounters</text>
+        </g>
+
+        <g id="d1-node-prep" data-node-id="prep" data-node-label="Preprocessing" aria-label="Focus Preprocessing, preprocessing.py, Architecture component" data-node-kind="backend" data-node-sublabel="preprocessing.py" data-node-context="Architecture component">
+          <title>Preprocessing · preprocessing.py · Architecture component</title>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Preprocessing</text>
+        <text data-detail="context" x="385" y="84" class="t-muted" font-size="12" text-anchor="middle">preprocessing.py</text>
+        </g>
+
+        <g id="d1-node-feat" data-node-id="feat" data-node-label="Patient split" aria-label="Focus Patient split, features.py, Architecture component" data-node-kind="backend" data-node-sublabel="features.py" data-node-tag="H1" data-node-context="Architecture component">
+          <title>Patient split · features.py · Architecture component · H1</title>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Patient split</text>
+        <text data-detail="context" x="655" y="84" class="t-muted" font-size="12" text-anchor="middle">features.py</text>
+        
+        </g>
+
+        <g id="d1-node-train" data-node-id="train" data-node-label="Train + calibrate" aria-label="Focus Train + calibrate, train.py, Architecture component" data-node-kind="backend" data-node-sublabel="train.py" data-node-tag="H2" data-node-context="Architecture component">
+          <title>Train + calibrate · train.py · Architecture component · H2</title>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(846 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Train + calibrate</text>
+        <text data-detail="context" x="925" y="84" class="t-muted" font-size="12" text-anchor="middle">train.py</text>
+        
+        </g>
+
+        <g id="d1-node-client" data-node-id="client" data-node-label="API client" aria-label="Focus API client, JSON encounter, Architecture component" data-node-kind="external" data-node-sublabel="JSON encounter" data-node-context="Architecture component">
+          <title>API client · JSON encounter · Architecture component</title>
+          <rect x="570" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="360" width="170" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(576 366) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">API client</text>
+        <text data-detail="context" x="655" y="404" class="t-muted" font-size="12" text-anchor="middle">JSON encounter</text>
+        </g>
+
+        <g id="d1-node-api" data-node-id="api" data-node-label="FastAPI" aria-label="Focus FastAPI, api.py /predict, Architecture component" data-node-kind="backend" data-node-sublabel="api.py /predict" data-node-context="Architecture component">
+          <title>FastAPI · api.py /predict · Architecture component</title>
+          <rect x="840" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="360" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(846 366) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">FastAPI</text>
+        <text data-detail="context" x="925" y="404" class="t-muted" font-size="12" text-anchor="middle">api.py /predict</text>
+        </g>
+
+        <g id="d1-node-eval" data-node-id="eval" data-node-label="Evaluate" aria-label="Focus Evaluate, evaluate.py, Architecture component" data-node-kind="backend" data-node-sublabel="evaluate.py" data-node-context="Architecture component">
+          <title>Evaluate · evaluate.py · Architecture component</title>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 206) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Evaluate</text>
+        <text data-detail="context" x="655" y="244" class="t-muted" font-size="12" text-anchor="middle">evaluate.py</text>
+        </g>
+
+        <g id="d1-node-model" data-node-id="model" data-node-label="Model bundle" aria-label="Focus Model bundle, models/model.joblib, Architecture component" data-node-kind="database" data-node-sublabel="models/model.joblib" data-node-context="Architecture component">
+          <title>Model bundle · models/model.joblib · Architecture component</title>
+          <rect x="840" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="200" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(846 206) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Model bundle</text>
+        <text data-detail="context" x="925" y="244" class="t-muted" font-size="12" text-anchor="middle">models/model.joblib</text>
+        </g>
+
+        <g id="d1-node-reports" data-node-id="reports" data-node-label="Reports" aria-label="Focus Reports, metrics, fairness, Architecture component" data-node-kind="database" data-node-sublabel="metrics, fairness" data-node-tag="H3" data-node-context="Architecture component">
+          <title>Reports · metrics, fairness · Architecture component · H3</title>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(306 206) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Reports</text>
+        <text data-detail="context" x="385" y="244" class="t-muted" font-size="12" text-anchor="middle">metrics, fairness</text>
+        
+        </g>
+
+        <!-- Connection labels -->
+        <g data-detail="context" data-edge-from="uci" data-edge-to="prep" data-edge-label="1 CSV" data-edge-key="0" data-edge-id="c1">
+          <rect x="226.5" y="47.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="250" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">1 CSV</text>
+        </g>
+        <g data-detail="context" data-edge-from="prep" data-edge-to="feat" data-edge-label="2 69,990 rows" data-edge-key="1" data-edge-id="c2">
+          <rect x="468.5" y="47.0" width="103.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">2 69,990 rows</text>
+        </g>
+        <g data-detail="context" data-edge-from="feat" data-edge-to="train" data-edge-label="3 70 / 15" data-edge-key="2" data-edge-id="c3">
+          <rect x="752.5" y="47.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">3 70 / 15</text>
+        </g>
+        <g data-detail="context" data-edge-from="train" data-edge-to="model" data-edge-label="4 joblib" data-edge-key="3" data-edge-id="c4">
+          <rect x="860.8" y="140.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="894.8" y="153" class="t-edge-emphasis" font-size="12" text-anchor="middle">4 joblib</text>
+        </g>
+        <g data-detail="context" data-edge-from="model" data-edge-to="eval" data-edge-label="5 load" data-edge-key="4" data-edge-id="c5">
+          <rect x="763.0" y="207.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="220" class="t-edge-default" font-size="12" text-anchor="middle">5 load</text>
+        </g>
+        <g data-detail="context" data-edge-from="eval" data-edge-to="reports" data-edge-label="6 test 15%" data-edge-key="5" data-edge-id="c6">
+          <rect x="479.0" y="207.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="220" class="t-edge-default" font-size="12" text-anchor="middle">6 test 15%</text>
+        </g>
+        <g data-detail="context" data-edge-from="client" data-edge-to="api" data-edge-label="P1 POST" data-edge-key="6" data-edge-id="c7">
+          <rect x="759.5" y="367.0" width="61.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="380" class="t-edge-dashed" font-size="12" text-anchor="middle">P1 POST</text>
+        </g>
+        <g data-detail="context" data-edge-from="api" data-edge-to="model" data-edge-label="P2 predict_proba" data-edge-key="7" data-edge-id="c8">
+          <rect x="863.0" y="337.0" width="124.0" height="18" rx="3" class="c-mask"/>
+          <text x="925" y="350" class="t-edge-dashed" font-size="12" text-anchor="middle">P2 predict_proba</text>
+        </g>
+
+        <!-- Boundary labels (foreground masks keep routes out of titles) -->
+
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="452" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="40" data-legend-baseline="472" data-legend-width="78">
+            <rect x="40" y="463" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="62" y="472" class="t-muted" font-size="12" font-weight="500">Backend</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="140" data-legend-baseline="472" data-legend-width="83">
+            <rect x="140" y="463" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="162" y="472" class="t-muted" font-size="12" font-weight="500">Database</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="245" data-legend-baseline="472" data-legend-width="83">
+            <rect x="245" y="463" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="267" y="472" class="t-muted" font-size="12" font-weight="500">External</text>
+          </g>
+        </g>
+      </svg></div></div></section><section class="block" aria-labelledby="b-how"><h2 id="b-how" class="split">How it works</h2><div><ol class="steps"><li><div><b>Clean</b><p>Map code ids to names, group ICD-9 diagnosis codes, handle missing values, count medications.</p></div></li><li><div><b>Cohort</b><p>Drop death and hospice discharges and keep each patient&#x27;s first stay: 69,990 patients.</p></div></li><li><div><b>Split</b><p>Group by patient into 70 / 15 / 15 train, validation and test sets, seed 42.</p></div></li><li><div><b>Fit and calibrate</b><p>Train both models with balanced class weights, then isotonic calibration on validation patients.</p></div></li><li><div><b>Threshold</b><p>Pick the lowest validation threshold reaching 20% precision; choose the model by validation PR-AUC.</p></div></li><li><div><b>Evaluate</b><p>Score the untouched test set once with bootstrap 95% intervals and fairness slices.</p></div></li></ol></div></section><section class="block wide" aria-label="Flow diagram"><div class="dia-wrap" tabindex="0" role="region" aria-label="Step-by-step flow diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1209px" viewBox="4 22 1209 443" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="d2-archify-diagram-title d2-archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="d2-archify-diagram-title">From raw data to a risk score</title>
+        <desc id="d2-archify-diagram-description">Steps 1 clean encounters, 2 select the cohort of first stays, 3 split by patient, 4 fit two models with balanced weights, 5 calibrate with isotonic regression on validation, 6 choose the threshold for 20 percent precision, 7 evaluate on test with intervals, 8 serve through POST /predict.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d2-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d2-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d2-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d2-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d2-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Swimlanes -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="1166" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="74" class="t-dim" font-size="12" font-weight="600">01 / Data prep</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="176" width="1166" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="198" class="t-dim" font-size="12" font-weight="600">02 / Training</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="300" width="1166" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="322" class="t-dim" font-size="12" font-weight="600">03 / Evaluate and serve</text>
+
+        <!-- Phase headers -->
+
+
+        <!-- Workflow groups -->
+
+
+        <!-- Edge paths -->
+        <path data-edge-from="clean" data-edge-to="cohort" data-edge-label="rows" data-edge-key="0" data-edge-id="e1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="198,119;236,119" d="M 198 119 L 236 119" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="cohort" data-edge-to="split" data-edge-label="patients" data-edge-key="1" data-edge-id="e2" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="386,119;442.4,119" d="M 386 119 L 442.4 119" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="split" data-edge-to="fit" data-edge-label="train 70%" data-edge-key="2" data-edge-id="e3" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="517.4,145;517.4,217" d="M 517.4 145 L 517.4 217" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="fit" data-edge-to="calib" data-edge-label="scores" data-edge-key="3" data-edge-id="e4" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="592.4,243;639.2,243" d="M 592.4 243 L 639.2 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="calib" data-edge-to="thresh" data-edge-label="probs" data-edge-key="4" data-edge-id="e5" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="789.2,243;831.2,243" d="M 789.2 243 L 831.2 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="thresh" data-edge-to="eval" data-edge-label="bundle" data-edge-key="5" data-edge-id="e6" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="906.2,269;906.2,341" d="M 906.2 269 L 906.2 341" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="eval" data-edge-to="serve" data-edge-label="best model" data-edge-key="6" data-edge-id="e7" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="981.2,367;1047.2,367" d="M 981.2 367 L 1047.2 367" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+
+        <!-- Nodes -->
+        <g id="d2-node-clean" data-node-id="clean" data-node-label="1 Clean" aria-label="Focus 1 Clean, clean_encounters, Data prep" data-node-kind="backend" data-node-sublabel="clean_encounters" data-node-context="Data prep">
+          <title>1 Clean · clean_encounters · Data prep</title>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(54 99) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="123" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">1 Clean</text>
+          <text data-detail="context" x="123" y="131" class="t-muted" font-size="12" text-anchor="middle">clean_encounters</text>
+        </g>
+
+        <g id="d2-node-cohort" data-node-id="cohort" data-node-label="2 Cohort" aria-label="Focus 2 Cohort, select_cohort, Data prep" data-node-kind="backend" data-node-sublabel="select_cohort" data-node-context="Data prep">
+          <title>2 Cohort · select_cohort · Data prep</title>
+          <rect x="236" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="236" y="93" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(242 99) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="311" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">2 Cohort</text>
+          <text data-detail="context" x="311" y="131" class="t-muted" font-size="12" text-anchor="middle">select_cohort</text>
+        </g>
+
+        <g id="d2-node-split" data-node-id="split" data-node-label="3 Split" aria-label="Focus 3 Split, patient_split, Data prep" data-node-kind="security" data-node-sublabel="patient_split" data-node-context="Data prep">
+          <title>3 Split · patient_split · Data prep</title>
+          <rect x="442.4" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="442.4" y="93" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(448.4 99) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="517.4" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">3 Split</text>
+          <text data-detail="context" x="517.4" y="131" class="t-muted" font-size="12" text-anchor="middle">patient_split</text>
+        </g>
+
+        <g id="d2-node-fit" data-node-id="fit" data-node-label="4 Fit 2 models" aria-label="Focus 4 Fit 2 models, balanced weights, Training" data-node-kind="backend" data-node-sublabel="balanced weights" data-node-context="Training">
+          <title>4 Fit 2 models · balanced weights · Training</title>
+          <rect x="442.4" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="442.4" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(448.4 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="517.4" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">4 Fit 2 models</text>
+          <text data-detail="context" x="517.4" y="255" class="t-muted" font-size="12" text-anchor="middle">balanced weights</text>
+        </g>
+
+        <g id="d2-node-calib" data-node-id="calib" data-node-label="5 Calibrate" aria-label="Focus 5 Calibrate, isotonic, validation, Training" data-node-kind="backend" data-node-sublabel="isotonic, validation" data-node-context="Training">
+          <title>5 Calibrate · isotonic, validation · Training</title>
+          <rect x="639.2" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="639.2" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(645.2 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="714.2" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">5 Calibrate</text>
+          <text data-detail="context" x="714.2" y="255" class="t-muted" font-size="12" text-anchor="middle">isotonic, validation</text>
+        </g>
+
+        <g id="d2-node-thresh" data-node-id="thresh" data-node-label="6 Threshold" aria-label="Focus 6 Threshold, precision 0.20, Training" data-node-kind="security" data-node-sublabel="precision 0.20" data-node-context="Training">
+          <title>6 Threshold · precision 0.20 · Training</title>
+          <rect x="831.2" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="831.2" y="217" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(837.2 223) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="906.2" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">6 Threshold</text>
+          <text data-detail="context" x="906.2" y="255" class="t-muted" font-size="12" text-anchor="middle">precision 0.20</text>
+        </g>
+
+        <g id="d2-node-eval" data-node-id="eval" data-node-label="7 Evaluate" aria-label="Focus 7 Evaluate, test + CI, Evaluate and serve" data-node-kind="backend" data-node-sublabel="test + CI" data-node-context="Evaluate and serve">
+          <title>7 Evaluate · test + CI · Evaluate and serve</title>
+          <rect x="831.2" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="831.2" y="341" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(837.2 347) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="906.2" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">7 Evaluate</text>
+          <text data-detail="context" x="906.2" y="379" class="t-muted" font-size="12" text-anchor="middle">test + CI</text>
+        </g>
+
+        <g id="d2-node-serve" data-node-id="serve" data-node-label="8 Serve" aria-label="Focus 8 Serve, POST /predict, Evaluate and serve" data-node-kind="frontend" data-node-sublabel="POST /predict" data-node-context="Evaluate and serve">
+          <title>8 Serve · POST /predict · Evaluate and serve</title>
+          <rect x="1047.2" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="1047.2" y="341" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(1053.2 347) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1122.2" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">8 Serve</text>
+          <text data-detail="context" x="1122.2" y="379" class="t-muted" font-size="12" text-anchor="middle">POST /predict</text>
+        </g>
+
+        <!-- Edge labels -->
+        <g data-detail="context" data-edge-from="clean" data-edge-to="cohort" data-edge-label="rows" data-edge-key="0" data-edge-id="e1">
+          <rect x="197.0" y="96.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="217" y="109" class="t-edge-emphasis" font-size="12" text-anchor="middle">rows</text>
+        </g>
+        <g data-detail="context" data-edge-from="cohort" data-edge-to="split" data-edge-label="patients" data-edge-key="1" data-edge-id="e2">
+          <rect x="380.2" y="96.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="414.2" y="109" class="t-edge-emphasis" font-size="12" text-anchor="middle">patients</text>
+        </g>
+        <g data-detail="context" data-edge-from="split" data-edge-to="fit" data-edge-label="train 70%" data-edge-key="2" data-edge-id="e3">
+          <rect x="479.9" y="168.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="517.4" y="181" class="t-edge-emphasis" font-size="12" text-anchor="middle">train 70%</text>
+        </g>
+        <g data-detail="context" data-edge-from="fit" data-edge-to="calib" data-edge-label="scores" data-edge-key="3" data-edge-id="e4">
+          <rect x="588.8" y="220.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="615.8" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">scores</text>
+        </g>
+        <g data-detail="context" data-edge-from="calib" data-edge-to="thresh" data-edge-label="probs" data-edge-key="4" data-edge-id="e5">
+          <rect x="786.7" y="220.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="810.2" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">probs</text>
+        </g>
+        <g data-detail="context" data-edge-from="thresh" data-edge-to="eval" data-edge-label="bundle" data-edge-key="5" data-edge-id="e6">
+          <rect x="879.2" y="292.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="906.2" y="305" class="t-edge-emphasis" font-size="12" text-anchor="middle">bundle</text>
+        </g>
+        <g data-detail="context" data-edge-from="eval" data-edge-to="serve" data-edge-label="best model" data-edge-key="6" data-edge-id="e7">
+          <rect x="973.2" y="344.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="1014.2" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">best model</text>
+        </g>
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="20" y="428" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="User UI" data-legend-x="20" data-legend-baseline="448" data-legend-width="74">
+            <rect x="20" y="440" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="448" class="t-muted" font-size="12" font-weight="500">User UI</text>
+          </g>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Agent logic" data-legend-x="101" data-legend-baseline="448" data-legend-width="91">
+            <rect x="101" y="440" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="123" y="448" class="t-muted" font-size="12" font-weight="500">Agent logic</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Policy" data-legend-x="199" data-legend-baseline="448" data-legend-width="70">
+            <rect x="199" y="440" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="221" y="448" class="t-muted" font-size="12" font-weight="500">Policy</text>
+          </g>
+        </g>
+      </svg></div></section><section class="block" aria-labelledby="b-res"><h2 id="b-res" class="split">Results</h2><div><dl class="results"><div><dt>test ROC-AUC, logistic regression / gradient boosting, on 10,499 held-out patients</dt><dd>0.641 / 0.639</dd></div><div><dt>test PR-AUC, about 1.7x the 9.0% base rate</dt><dd>0.15</dd></div><div><dt>readmissions caught at 20% precision, gradient boosting vs baseline</dt><dd>21% vs 13%</dd></div></dl></div></section><section class="block" aria-labelledby="b-why"><h2 id="b-why" class="split">Design decisions</h2><div><ul class="bullets"><li>Patient-level split blocks leakage, since about 30% of encounters are repeat patients.</li><li>Calibration after balanced weights makes a predicted 10% risk mean about 10% readmitted.</li><li>Threshold set on validation only; the test set is touched once.</li></ul></div></section><section class="block wide" aria-labelledby="b-shots"><h2 id="b-shots" class="split">Screens</h2><div class="shots"><figure><img src="/assets/img/patient-readmission-platform-1-800.e888fe2434.webp" srcset="/assets/img/patient-readmission-platform-1-800.e888fe2434.webp 800w, /assets/img/patient-readmission-platform-1.a725bad182.webp 1519w" sizes="(max-width: 767px) 92vw, 45vw" width="1519" height="1207" alt="Bar chart of gradient boosting ROC-AUC by patient group (age, gender and race) on the test set; groups too small to score are marked" loading="lazy"><figcaption>Bar chart of gradient boosting ROC-AUC by patient group (age, gender and race) on the test set.</figcaption></figure><figure><img src="/assets/img/patient-readmission-platform-2-800.0503c582de.webp" srcset="/assets/img/patient-readmission-platform-2-800.0503c582de.webp 800w, /assets/img/patient-readmission-platform-2.bc98c639ee.webp 1123w" sizes="(max-width: 767px) 92vw, 45vw" width="1123" height="999" alt="Calibration plot on held-out patients: predicted risk against the observed 30-day readmission rate for logistic regression and gradient boosting" loading="lazy"><figcaption>Calibration plot on held-out patients.</figcaption></figure><figure><img src="/assets/img/patient-readmission-platform-3-800.c99551f54b.webp" srcset="/assets/img/patient-readmission-platform-3-800.c99551f54b.webp 800w, /assets/img/patient-readmission-platform-3.a15802897b.webp 1124w" sizes="(max-width: 767px) 92vw, 45vw" width="1124" height="999" alt="ROC curves on held-out patients: logistic regression 0.641 and gradient boosting 0.639 ROC-AUC, above the chance line" loading="lazy"><figcaption>ROC curves on held-out patients.</figcaption></figure><figure><img src="/assets/img/patient-readmission-platform-4-800.636d0f0792.webp" srcset="/assets/img/patient-readmission-platform-4-800.636d0f0792.webp 800w, /assets/img/patient-readmission-platform-4.f50f854e81.webp 1279w" sizes="(max-width: 767px) 92vw, 45vw" width="1279" height="938" alt="Precision against recall on held-out patients for both models, PR-AUC about 0.15 against a 9% base rate" loading="lazy"><figcaption>Precision against recall on held-out patients for both models, PR-AUC about 0.15 against a 9% base rate.</figcaption></figure><figure><img src="/assets/img/patient-readmission-platform-5-800.2e49eec9db.webp" srcset="/assets/img/patient-readmission-platform-5-800.2e49eec9db.webp 800w, /assets/img/patient-readmission-platform-5.d1d0e9105c.webp 1118w" sizes="(max-width: 767px) 92vw, 45vw" width="1118" height="941" alt="Confusion matrix for gradient boosting at threshold 0.153: 200 readmitted patients flagged, 749 missed and 756 false flags" loading="lazy"><figcaption>Confusion matrix for gradient boosting at threshold 0.153.</figcaption></figure></div></section><section class="block" aria-labelledby="b-stack"><h2 id="b-stack" class="split">Stack</h2><div><ul class="tags"><li>Python</li><li>scikit-learn</li><li>pandas</li><li>matplotlib</li><li>FastAPI</li><li>Pydantic</li><li>GitHub Actions</li></ul><div class="case-cta"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/patient-readmission-platform" data-repo="patient-readmission-platform">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a></div></div></section>
+    <a class="next" href="/work/sql-analytics/" data-case-link><small>Next project</small><b>SQL analytics</b><span class="link">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></span></a>
+  </div>
+</main>
+<footer class="wrap"><div class="foot"><span>Neelmayank Rawat. B.Tech in Computer Science and Engineering, RCOEM Nagpur, 2023 to 2027.</span>
+<span><a href="https://github.com/rawatneelmayank1-sire" data-link="github">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/neelmayank-rawat-028886355/" data-link="linkedin">LinkedIn</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script><script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/js/site.2656d6d058.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">import { createField } from '/assets/js/field.645b8db74f.js';
+const host = document.querySelector('.case-head'), cv = host && host.querySelector('canvas');
+try { if (cv) { window.NR = window.NR || {}; NR.field = await createField({ canvas: cv, mode: 'single', shape: cv.dataset.shape, side: 'right', host }); } }
+catch (e) { document.documentElement.classList.add('no-gl'); }</script>
+</body>
+</html>

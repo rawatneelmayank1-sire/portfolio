@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>{ const q = new URLSearchParams(location.search), d = document.documentElement;
+  if (q.has('static')) d.dataset.static = '';
+  if (q.has('reduce') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.dataset.motion = 'reduce';
+  try { const t = localStorage.getItem('nr-theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {} }
+/* every external link in one place: change the site URL here when the Netlify name is final */
+window.LINKS = { site: 'https://neelmayank-rawat.netlify.app', github: 'https://github.com/rawatneelmayank1-sire', linkedin: 'https://www.linkedin.com/in/neelmayank-rawat-028886355/',
+  email: 'mailto:rawatneelmayank1@gmail.com', repo: name => 'https://github.com/rawatneelmayank1-sire/' + name };</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>URL Shortener, case study</title>
+<meta name="description" content="URL Shortener: A Spring Boot link shortener whose redirect path never writes to the database.">
+<meta name="theme-color" content="#EEF0F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://neelmayank-rawat.netlify.app/work/url-shortener/">
+<meta property="og:type" content="website"><meta property="og:title" content="URL Shortener, case study"><meta property="og:description" content="URL Shortener: A Spring Boot link shortener whose redirect path never writes to the database."><meta property="og:url" content="https://neelmayank-rawat.netlify.app/work/url-shortener/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A1D24'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C4472B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="/assets/css/site.9c5d8f7a8e.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" aria-label="Site"><div class="nav">
+  <a class="brand" href="/">Neelmayank Rawat</a>
+  <nav class="nav__links" aria-label="Sections"><a href="/#work">Work</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+  <div class="nav__end">
+    <button class="icon-btn pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><i class="ph ph-pause" aria-hidden="true"></i><span class="vh">Pause motion</span></button>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch theme"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn--solid magnetic" href="mailto:rawatneelmayank1@gmail.com" data-link="email" style="padding:0 20px">Email me</a>
+  </div>
+</div></header>
+<main id="main">
+  <header class="case-head">
+    <canvas aria-hidden="true" data-shape="hub"></canvas>
+    <div class="wrap case-head__in">
+      <p class="crumb load-in" style="--i:0"><a href="/#w-url-shortener"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a><span aria-hidden="true">/</span><span>Backend</span></p>
+      <h1 class="case-title" style="view-transition-name: t-url-shortener">URL Shortener</h1>
+      <p class="case-line load-in" style="--i:2">A Spring Boot link shortener whose redirect path never writes to the database.</p>
+      <div class="case-cta load-in" style="--i:3"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/url-shortener" data-repo="url-shortener">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a><a class="btn magnetic" href="#b-problem">Skip to the problem</a></div>
+    </div>
+  </header>
+  <div class="wrap case-body">
+    <section class="block" aria-labelledby="b-problem"><h2 id="b-problem" class="split">Problem</h2><div class="prose"><p>Redirects must stay fast and must not fail when analytics is slow. Click logs hold IP addresses, so they must stay private to the link owner.</p></div></section><section class="block" aria-labelledby="b-does"><h2 id="b-does" class="split">What it does</h2><div><ul class="bullets"><li>Shortens long URLs into random Base62 codes or validated custom aliases, with optional expiry.</li><li>Redirects through a Redis cache that never outlives the link.</li><li>Counts clicks asynchronously through Kafka with a single consumer as the only writer.</li><li>Rate limits each client with a Redis sliding window run as one Lua script.</li><li>Shows click stats only to the link owner; everyone else gets 403.</li></ul></div></section><section class="block wide" aria-labelledby="b-arch"><h2 id="b-arch" class="split">Architecture</h2><div><p class=dia-note>One Spring Boot app with PostgreSQL, Redis and Kafka in Docker Compose. Health checks and Prometheus metrics sit on a separate management port.</p><div class="dia-wrap" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1017px" viewBox="14 10 1017 479" role="img" lang="en" aria-labelledby="d1-archify-diagram-title d1-archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
+        <title id="d1-archify-diagram-title">URL shortener system overview</title>
+        <desc id="d1-archify-diagram-description">Numbered redirect path: 1 visitor request to the rate limit filter, 2a Lua script on Redis, 2 allowed to the redirect controller, 3 resolve to UrlService, 4 GET url key from Redis, 5 PostgreSQL on a miss, 6 publish a click to the Kafka topic, 7 onClick in the click consumer, 8 insert the click and add 1 in PostgreSQL. Owner path: A1 JWT to the URL API, A2 own links in PostgreSQL.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d1-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d1-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d1-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d1-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d1-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Boundaries (behind everything) -->
+
+
+        <!-- Connection paths (before components for correct z-order) -->
+        <g data-graph-role="automatic-crossover" style="--step:0">
+          <path data-graph-role="automatic-crossover-underlay" d="M 200 70 L 300 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="client" data-edge-to="rl" data-edge-label="1 request" data-edge-key="0" data-edge-id="c1" data-composition-points="200,70;300,70" data-composition-crossover="halo" data-composition-independent="true" d="M 200 70 L 300 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:1">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 70 L 570 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="rl" data-edge-to="redirect" data-edge-label="2 allowed" data-edge-key="1" data-edge-id="c2" data-composition-points="470,70;570,70" data-composition-crossover="halo" data-composition-independent="true" d="M 470 70 L 570 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:2">
+          <path data-graph-role="automatic-crossover-underlay" d="M 385 100 L 385 200" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="rl" data-edge-to="redis" data-edge-label="2a Lua script" data-edge-key="2" data-edge-id="c3" data-composition-points="385,100;385,200" data-composition-crossover="halo" data-composition-independent="true" d="M 385 100 L 385 200" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:3">
+          <path data-graph-role="automatic-crossover-underlay" d="M 655 100 L 655 200" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="redirect" data-edge-to="svc" data-edge-label="3 resolve" data-edge-key="3" data-edge-id="c4" data-composition-points="655,100;655,200" data-composition-crossover="halo" data-composition-independent="true" d="M 655 100 L 655 200" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:4">
+          <path data-graph-role="automatic-crossover-underlay" d="M 570 230 L 470 230" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="svc" data-edge-to="redis" data-edge-label="4 GET url:" data-edge-key="4" data-edge-id="c5" data-composition-points="570,230;470,230" data-composition-crossover="halo" data-composition-independent="true" d="M 570 230 L 470 230" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:5">
+          <path data-graph-role="automatic-crossover-underlay" d="M 655 260 L 655 360" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="svc" data-edge-to="pg" data-edge-label="5 on a miss" data-edge-key="5" data-edge-id="c6" data-composition-points="655,260;655,360" data-composition-crossover="halo" data-composition-independent="true" d="M 655 260 L 655 360" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:6">
+          <path data-graph-role="automatic-crossover-underlay" d="M 740 70 L 840 70" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="redirect" data-edge-to="kafka" data-edge-label="6 publish" data-edge-key="6" data-edge-id="c7" data-composition-points="740,70;840,70" data-composition-crossover="halo" data-composition-independent="true" d="M 740 70 L 840 70" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:7">
+          <path data-graph-role="automatic-crossover-underlay" d="M 925 100 L 925 360" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="kafka" data-edge-to="consumer" data-edge-label="7 onClick" data-edge-key="7" data-edge-id="c8" data-composition-points="925,100;925,360" data-composition-crossover="halo" data-composition-independent="true" d="M 925 100 L 925 360" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:8">
+          <path data-graph-role="automatic-crossover-underlay" d="M 840 390 L 740 390" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="consumer" data-edge-to="pg" data-edge-label="8 insert, +1" data-edge-key="8" data-edge-id="c9" data-composition-points="840,390;740,390" data-composition-crossover="halo" data-composition-independent="true" d="M 840 390 L 740 390" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:9">
+          <path data-graph-role="automatic-crossover-underlay" d="M 200 390 L 300 390" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="owner" data-edge-to="ctrl" data-edge-label="A1 JWT" data-edge-key="9" data-edge-id="c10" data-composition-points="200,390;300,390" data-composition-crossover="halo" data-composition-independent="true" d="M 200 390 L 300 390" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:10">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 390 L 570 390" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="ctrl" data-edge-to="pg" data-edge-label="A2 own links" data-edge-key="10" data-edge-id="c11" data-composition-points="470,390;570,390" data-composition-crossover="halo" data-composition-independent="true" d="M 470 390 L 570 390" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+
+        <!-- Components -->
+        <g id="d1-node-client" data-node-id="client" data-node-label="Visitor" aria-label="Focus Visitor, GET /{code}, Architecture component" data-node-kind="external" data-node-sublabel="GET /{code}" data-node-context="Architecture component">
+          <title>Visitor · GET /{code} · Architecture component</title>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(36 46) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="115" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Visitor</text>
+        <text data-detail="context" x="115" y="84" class="t-muted" font-size="12" text-anchor="middle">GET /{code}</text>
+        </g>
+
+        <g id="d1-node-rl" data-node-id="rl" data-node-label="Rate limit filter" aria-label="Focus Rate limit filter, RateLimitFilter, Architecture component" data-node-kind="security" data-node-sublabel="RateLimitFilter" data-node-tag="H2" data-node-context="Architecture component">
+          <title>Rate limit filter · RateLimitFilter · Architecture component · H2</title>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(306 46) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Rate limit filter</text>
+        <text data-detail="context" x="385" y="84" class="t-muted" font-size="12" text-anchor="middle">RateLimitFilter</text>
+        
+        </g>
+
+        <g id="d1-node-redirect" data-node-id="redirect" data-node-label="Redirect controller" aria-label="Focus Redirect controller, RedirectController, Architecture component" data-node-kind="backend" data-node-sublabel="RedirectController" data-node-context="Architecture component">
+          <title>Redirect controller · RedirectController · Architecture component</title>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Redirect controller</text>
+        <text data-detail="context" x="655" y="84" class="t-muted" font-size="12" text-anchor="middle">RedirectController</text>
+        </g>
+
+        <g id="d1-node-kafka" data-node-id="kafka" data-node-label="Kafka topic" aria-label="Focus Kafka topic, click-events, Architecture component" data-node-kind="messagebus" data-node-sublabel="click-events" data-node-tag="H3" data-node-context="Architecture component">
+          <title>Kafka topic · click-events · Architecture component · H3</title>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(846 46) scale(0.6875)">
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
+            <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
+            <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
+            <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Kafka topic</text>
+        <text data-detail="context" x="925" y="84" class="t-muted" font-size="12" text-anchor="middle">click-events</text>
+        
+        </g>
+
+        <g id="d1-node-redis" data-node-id="redis" data-node-label="Redis 7.4" aria-label="Focus Redis 7.4, cache + limiter, Architecture component" data-node-kind="database" data-node-sublabel="cache + limiter" data-node-context="Architecture component">
+          <title>Redis 7.4 · cache + limiter · Architecture component</title>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(306 206) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Redis 7.4</text>
+        <text data-detail="context" x="385" y="244" class="t-muted" font-size="12" text-anchor="middle">cache + limiter</text>
+        </g>
+
+        <g id="d1-node-svc" data-node-id="svc" data-node-label="UrlService" aria-label="Focus UrlService, resolve(), Architecture component" data-node-kind="backend" data-node-sublabel="resolve()" data-node-tag="H1" data-node-context="Architecture component">
+          <title>UrlService · resolve() · Architecture component · H1</title>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 206) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">UrlService</text>
+        <text data-detail="context" x="655" y="244" class="t-muted" font-size="12" text-anchor="middle">resolve()</text>
+        
+        </g>
+
+        <g id="d1-node-owner" data-node-id="owner" data-node-label="Link owner" aria-label="Focus Link owner, JWT bearer token, Architecture component" data-node-kind="external" data-node-sublabel="JWT bearer token" data-node-context="Architecture component">
+          <title>Link owner · JWT bearer token · Architecture component</title>
+          <rect x="30" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="30" y="360" width="170" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(36 366) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="115" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Link owner</text>
+        <text data-detail="context" x="115" y="404" class="t-muted" font-size="12" text-anchor="middle">JWT bearer token</text>
+        </g>
+
+        <g id="d1-node-ctrl" data-node-id="ctrl" data-node-label="URL API" aria-label="Focus URL API, UrlController, Architecture component" data-node-kind="backend" data-node-sublabel="UrlController" data-node-context="Architecture component">
+          <title>URL API · UrlController · Architecture component</title>
+          <rect x="300" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="360" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 366) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">URL API</text>
+        <text data-detail="context" x="385" y="404" class="t-muted" font-size="12" text-anchor="middle">UrlController</text>
+        </g>
+
+        <g id="d1-node-pg" data-node-id="pg" data-node-label="PostgreSQL 16" aria-label="Focus PostgreSQL 16, urls, click_events, Architecture component" data-node-kind="database" data-node-sublabel="urls, click_events" data-node-context="Architecture component">
+          <title>PostgreSQL 16 · urls, click_events · Architecture component</title>
+          <rect x="570" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="360" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(576 366) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">PostgreSQL 16</text>
+        <text data-detail="context" x="655" y="404" class="t-muted" font-size="12" text-anchor="middle">urls, click_events</text>
+        </g>
+
+        <g id="d1-node-consumer" data-node-id="consumer" data-node-label="Click consumer" aria-label="Focus Click consumer, ClickEventConsumer, Architecture component" data-node-kind="backend" data-node-sublabel="ClickEventConsumer" data-node-context="Architecture component">
+          <title>Click consumer · ClickEventConsumer · Architecture component</title>
+          <rect x="840" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="360" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(846 366) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Click consumer</text>
+        <text data-detail="context" x="925" y="404" class="t-muted" font-size="12" text-anchor="middle">ClickEventConsumer</text>
+        </g>
+
+        <!-- Connection labels -->
+        <g data-detail="context" data-edge-from="client" data-edge-to="rl" data-edge-label="1 request" data-edge-key="0" data-edge-id="c1">
+          <rect x="212.5" y="47.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="250" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">1 request</text>
+        </g>
+        <g data-detail="context" data-edge-from="rl" data-edge-to="redirect" data-edge-label="2 allowed" data-edge-key="1" data-edge-id="c2">
+          <rect x="482.5" y="47.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">2 allowed</text>
+        </g>
+        <g data-detail="context" data-edge-from="rl" data-edge-to="redis" data-edge-label="2a Lua script" data-edge-key="2" data-edge-id="c3">
+          <rect x="291.3" y="140.0" width="103.0" height="18" rx="3" class="c-mask"/>
+          <text x="342.8" y="153" class="t-edge-default" font-size="12" text-anchor="middle">2a Lua script</text>
+        </g>
+        <g data-detail="context" data-edge-from="redirect" data-edge-to="svc" data-edge-label="3 resolve" data-edge-key="3" data-edge-id="c4">
+          <rect x="584.9" y="140.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="622.4" y="153" class="t-edge-emphasis" font-size="12" text-anchor="middle">3 resolve</text>
+        </g>
+        <g data-detail="context" data-edge-from="svc" data-edge-to="redis" data-edge-label="4 GET url:" data-edge-key="4" data-edge-id="c5">
+          <rect x="479.0" y="207.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="220" class="t-edge-emphasis" font-size="12" text-anchor="middle">4 GET url:</text>
+        </g>
+        <g data-detail="context" data-edge-from="svc" data-edge-to="pg" data-edge-label="5 on a miss" data-edge-key="5" data-edge-id="c6">
+          <rect x="573.1" y="300.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="617.6" y="313" class="t-edge-default" font-size="12" text-anchor="middle">5 on a miss</text>
+        </g>
+        <g data-detail="context" data-edge-from="redirect" data-edge-to="kafka" data-edge-label="6 publish" data-edge-key="6" data-edge-id="c7">
+          <rect x="752.5" y="47.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="60" class="t-edge-dashed" font-size="12" text-anchor="middle">6 publish</text>
+        </g>
+        <g data-detail="context" data-edge-from="kafka" data-edge-to="consumer" data-edge-label="7 onClick" data-edge-key="7" data-edge-id="c8">
+          <rect x="854.9" y="220.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="892.4" y="233" class="t-edge-dashed" font-size="12" text-anchor="middle">7 onClick</text>
+        </g>
+        <g data-detail="context" data-edge-from="consumer" data-edge-to="pg" data-edge-label="8 insert, +1" data-edge-key="8" data-edge-id="c9">
+          <rect x="742.0" y="367.0" width="96.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="380" class="t-edge-dashed" font-size="12" text-anchor="middle">8 insert, +1</text>
+        </g>
+        <g data-detail="context" data-edge-from="owner" data-edge-to="ctrl" data-edge-label="A1 JWT" data-edge-key="9" data-edge-id="c10">
+          <rect x="223.0" y="367.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="250" y="380" class="t-edge-default" font-size="12" text-anchor="middle">A1 JWT</text>
+        </g>
+        <g data-detail="context" data-edge-from="ctrl" data-edge-to="pg" data-edge-label="A2 own links" data-edge-key="10" data-edge-id="c11">
+          <rect x="472.0" y="367.0" width="96.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="380" class="t-edge-default" font-size="12" text-anchor="middle">A2 own links</text>
+        </g>
+
+        <!-- Boundary labels (foreground masks keep routes out of titles) -->
+
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="452" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="40" data-legend-baseline="472" data-legend-width="78">
+            <rect x="40" y="463" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="62" y="472" class="t-muted" font-size="12" font-weight="500">Backend</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="140" data-legend-baseline="472" data-legend-width="83">
+            <rect x="140" y="463" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="162" y="472" class="t-muted" font-size="12" font-weight="500">Database</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Security" data-legend-x="245" data-legend-baseline="472" data-legend-width="83">
+            <rect x="245" y="463" width="16" height="10" rx="2.5" class="c-security" stroke-width="1"/>
+            <text x="267" y="472" class="t-muted" font-size="12" font-weight="500">Security</text>
+          </g>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Message bus" data-legend-x="350" data-legend-baseline="472" data-legend-width="98">
+            <rect x="350" y="463" width="16" height="10" rx="2.5" class="c-messagebus" stroke-width="1"/>
+            <text x="372" y="472" class="t-muted" font-size="12" font-weight="500">Message bus</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="470" data-legend-baseline="472" data-legend-width="83">
+            <rect x="470" y="463" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="492" y="472" class="t-muted" font-size="12" font-weight="500">External</text>
+          </g>
+        </g>
+      </svg></div></div></section><section class="block" aria-labelledby="b-how"><h2 id="b-how" class="split">How it works</h2><div><ol class="steps"><li><div><b>Rate limit</b><p>One Lua script on a Redis sorted set allows 100 requests per 60 s, else 429.</p></div></li><li><div><b>Check format</b><p>A code that cannot be valid returns 404 without touching Redis.</p></div></li><li><div><b>Cache read</b><p>Read the link from Redis; a Redis error counts as a miss so redirects keep working.</p></div></li><li><div><b>Cache miss</b><p>Load from PostgreSQL; expired or deactivated returns 410; else cache with TTL capped at expiry.</p></div></li><li><div><b>Publish click</b><p>Send a click event to Kafka, waiting at most 1 s, then return 302.</p></div></li><li><div><b>Count</b><p>The consumer saves the click row and increments the counter with one atomic SQL update.</p></div></li></ol></div></section><section class="block wide" aria-label="Flow diagram"><div class="dia-wrap" tabindex="0" role="region" aria-label="Step-by-step flow diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1036px" viewBox="4 22 1036 443" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="d2-archify-diagram-title d2-archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="d2-archify-diagram-title">One redirect through the URL shortener</title>
+        <desc id="d2-archify-diagram-description">Steps 1 GET short code, 2 rate limit, 3 resolve, 4 cache get; on a hit 6 publish the click and 7 return 302 Location; on a miss 5 PostgreSQL lookup, then warm the cache.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d2-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d2-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d2-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d2-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d2-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Swimlanes -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="993" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="74" class="t-dim" font-size="12" font-weight="600">01 / Visitor</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="176" width="993" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="198" class="t-dim" font-size="12" font-weight="600">02 / Spring Boot app</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="300" width="993" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-2-exception" x="46" y="306" width="981" height="92" rx="8" class="c-security-group" stroke-width="1"/>
+        <text x="54" y="322" class="t-security" font-size="12" font-weight="600">EX / Cache miss</text>
+
+        <!-- Phase headers -->
+
+
+        <!-- Workflow groups -->
+
+
+        <!-- Edge paths -->
+        <path data-edge-from="req" data-edge-to="rl" data-edge-label="HTTP" data-edge-key="0" data-edge-id="e1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="198,119;243,119;243,217" d="M 198 119 L 243 119 L 243 217" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="rl" data-edge-to="resolve" data-edge-label="allowed" data-edge-key="1" data-edge-id="e2" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="318,243;369.6,243" d="M 318 243 L 369.6 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="resolve" data-edge-to="get" data-edge-label="lookup" data-edge-key="2" data-edge-id="e3" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="519.6,243;566.4000000000001,243" d="M 519.6 243 L 566.4000000000001 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="get" data-edge-to="pub" data-edge-label="hit" data-edge-key="3" data-edge-id="e4" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="716.4000000000001,243;754.4000000000001,243" d="M 716.4000000000001 243 L 754.4000000000001 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="pub" data-edge-to="resp" data-edge-label="302" data-edge-key="4" data-edge-id="e5" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="829.4000000000001,217;829.4000000000001,119;874.4000000000001,119" d="M 829.4000000000001 217 L 829.4000000000001 119 L 874.4000000000001 119" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="get" data-edge-to="pg" data-edge-label="miss" data-edge-key="5" data-edge-id="e6" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="634.4000000000001,269;634.4000000000001,341" d="M 634.4000000000001 269 L 634.4000000000001 341" class="a-security" stroke-width="1.4" marker-end="url(#d2-arrowhead-security)"/>
+        <path data-edge-from="pg" data-edge-to="get" data-edge-label="warm cache" data-edge-key="6" data-edge-id="e7" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="716.4000000000001,367;732.4000000000001,367;732.4000000000001,290;665.4000000000001,290;665.4000000000001,269" d="M 716.4000000000001 367 L 732.4000000000001 367 L 732.4000000000001 290 L 665.4000000000001 290 L 665.4000000000001 269" class="a-dashed" stroke-width="1.4" marker-end="url(#d2-arrowhead-dashed)"/>
+
+        <!-- Nodes -->
+        <g id="d2-node-req" data-node-id="req" data-node-label="1 GET /{code}" aria-label="Focus 1 GET /{code}, opens short link, Visitor" data-node-kind="frontend" data-node-sublabel="opens short link" data-node-context="Visitor">
+          <title>1 GET /{code} · opens short link · Visitor</title>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(54 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="123" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">1 GET /{code}</text>
+          <text data-detail="context" x="123" y="131" class="t-muted" font-size="12" text-anchor="middle">opens short link</text>
+        </g>
+
+        <g id="d2-node-resp" data-node-id="resp" data-node-label="7 302 Location" aria-label="Focus 7 302 Location, browser follows, Visitor" data-node-kind="frontend" data-node-sublabel="browser follows" data-node-context="Visitor">
+          <title>7 302 Location · browser follows · Visitor</title>
+          <rect x="874.4000000000001" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="874.4000000000001" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(880.4000000000001 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="949.4000000000001" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">7 302 Location</text>
+          <text data-detail="context" x="949.4000000000001" y="131" class="t-muted" font-size="12" text-anchor="middle">browser follows</text>
+        </g>
+
+        <g id="d2-node-rl" data-node-id="rl" data-node-label="2 Rate limit" aria-label="Focus 2 Rate limit, RateLimitFilter, Spring Boot app" data-node-kind="security" data-node-sublabel="RateLimitFilter" data-node-context="Spring Boot app">
+          <title>2 Rate limit · RateLimitFilter · Spring Boot app</title>
+          <rect x="168" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="168" y="217" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(174 223) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="243" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">2 Rate limit</text>
+          <text data-detail="context" x="243" y="255" class="t-muted" font-size="12" text-anchor="middle">RateLimitFilter</text>
+        </g>
+
+        <g id="d2-node-resolve" data-node-id="resolve" data-node-label="3 resolve()" aria-label="Focus 3 resolve(), UrlService, Spring Boot app" data-node-kind="backend" data-node-sublabel="UrlService" data-node-context="Spring Boot app">
+          <title>3 resolve() · UrlService · Spring Boot app</title>
+          <rect x="369.6" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="369.6" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(375.6 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="444.6" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">3 resolve()</text>
+          <text data-detail="context" x="444.6" y="255" class="t-muted" font-size="12" text-anchor="middle">UrlService</text>
+        </g>
+
+        <g id="d2-node-get" data-node-id="get" data-node-label="4 cache.get()" aria-label="Focus 4 cache.get(), key url:{code}, Spring Boot app" data-node-kind="database" data-node-sublabel="key url:{code}" data-node-context="Spring Boot app">
+          <title>4 cache.get() · key url:{code} · Spring Boot app</title>
+          <rect x="566.4000000000001" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="566.4000000000001" y="217" width="150" height="52" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(572.4000000000001 223) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="641.4000000000001" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">4 cache.get()</text>
+          <text data-detail="context" x="641.4000000000001" y="255" class="t-muted" font-size="12" text-anchor="middle">key url:{code}</text>
+        </g>
+
+        <g id="d2-node-pub" data-node-id="pub" data-node-label="6 publish()" aria-label="Focus 6 publish(), click to Kafka, Spring Boot app" data-node-kind="messagebus" data-node-sublabel="click to Kafka" data-node-context="Spring Boot app">
+          <title>6 publish() · click to Kafka · Spring Boot app</title>
+          <rect x="754.4000000000001" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="754.4000000000001" y="217" width="150" height="52" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(760.4000000000001 223) scale(0.6875)">
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
+            <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
+            <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
+            <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="829.4000000000001" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">6 publish()</text>
+          <text data-detail="context" x="829.4000000000001" y="255" class="t-muted" font-size="12" text-anchor="middle">click to Kafka</text>
+        </g>
+
+        <g id="d2-node-pg" data-node-id="pg" data-node-label="5 DB lookup" aria-label="Focus 5 DB lookup, active, not expired, Cache miss" data-node-kind="database" data-node-sublabel="active, not expired" data-node-context="Cache miss">
+          <title>5 DB lookup · active, not expired · Cache miss</title>
+          <rect x="566.4000000000001" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="566.4000000000001" y="341" width="150" height="52" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(572.4000000000001 347) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="641.4000000000001" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">5 DB lookup</text>
+          <text data-detail="context" x="641.4000000000001" y="379" class="t-muted" font-size="12" text-anchor="middle">active, not expired</text>
+        </g>
+
+        <!-- Edge labels -->
+        <g data-detail="context" data-edge-from="req" data-edge-to="rl" data-edge-label="HTTP" data-edge-key="0" data-edge-id="e1">
+          <rect x="200.5" y="96.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="220.5" y="109" class="t-edge-emphasis" font-size="12" text-anchor="middle">HTTP</text>
+        </g>
+        <g data-detail="context" data-edge-from="rl" data-edge-to="resolve" data-edge-label="allowed" data-edge-key="1" data-edge-id="e2">
+          <rect x="313.3" y="220.0" width="61.0" height="18" rx="3" class="c-mask"/>
+          <text x="343.8" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">allowed</text>
+        </g>
+        <g data-detail="context" data-edge-from="resolve" data-edge-to="get" data-edge-label="lookup" data-edge-key="2" data-edge-id="e3">
+          <rect x="516.0" y="220.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="543" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">lookup</text>
+        </g>
+        <g data-detail="context" data-edge-from="get" data-edge-to="pub" data-edge-label="hit" data-edge-key="3" data-edge-id="e4">
+          <rect x="718.9" y="220.0" width="33.0" height="18" rx="3" class="c-mask"/>
+          <text x="735.4000000000001" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">hit</text>
+        </g>
+        <g data-detail="context" data-edge-from="pub" data-edge-to="resp" data-edge-label="302" data-edge-key="4" data-edge-id="e5">
+          <rect x="835.4" y="96.0" width="33.0" height="18" rx="3" class="c-mask"/>
+          <text x="851.9000000000001" y="109" class="t-edge-emphasis" font-size="12" text-anchor="middle">302</text>
+        </g>
+        <g data-detail="context" data-edge-from="get" data-edge-to="pg" data-edge-label="miss" data-edge-key="5" data-edge-id="e6">
+          <rect x="614.4" y="292.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="634.4000000000001" y="305" class="t-edge-security" font-size="12" text-anchor="middle">miss</text>
+        </g>
+        <g data-detail="context" data-edge-from="pg" data-edge-to="get" data-edge-label="warm cache" data-edge-key="6" data-edge-id="e7">
+          <rect x="657.9" y="267.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="698.9000000000001" y="280" class="t-edge-dashed" font-size="12" text-anchor="middle">warm cache</text>
+        </g>
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="20" y="428" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="User UI" data-legend-x="20" data-legend-baseline="448" data-legend-width="74">
+            <rect x="20" y="440" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="448" class="t-muted" font-size="12" font-weight="500">User UI</text>
+          </g>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Agent logic" data-legend-x="101" data-legend-baseline="448" data-legend-width="91">
+            <rect x="101" y="440" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="123" y="448" class="t-muted" font-size="12" font-weight="500">Agent logic</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Policy" data-legend-x="199" data-legend-baseline="448" data-legend-width="70">
+            <rect x="199" y="440" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="221" y="448" class="t-muted" font-size="12" font-weight="500">Policy</text>
+          </g>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Tool action" data-legend-x="276" data-legend-baseline="448" data-legend-width="91">
+            <rect x="276" y="440" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
+            <text x="298" y="448" class="t-muted" font-size="12" font-weight="500">Tool action</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Context / trace" data-legend-x="374" data-legend-baseline="448" data-legend-width="109">
+            <rect x="374" y="440" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="396" y="448" class="t-muted" font-size="12" font-weight="500">Context / trace</text>
+          </g>
+        </g>
+      </svg></div></section><section class="block" aria-labelledby="b-res"><h2 id="b-res" class="split">Results</h2><div><dl class="results"><div><dt>unit and web-slice tests passed, BUILD SUCCESS</dt><dd>103</dd></div><div><dt>Testcontainers integration test classes run in CI on real PostgreSQL, Redis and Kafka</dt><dd>2</dd></div><div><dt>default per-client rate limit</dt><dd>100 / 60 s</dd></div></dl></div></section><section class="block" aria-labelledby="b-why"><h2 id="b-why" class="split">Design decisions</h2><div><ul class="bullets"><li>Click counting moved off the redirect, removing a double count from two writers.</li><li>Client IP read only from trusted proxies, so a spoofed header cannot bypass the limiter.</li><li>Errors return RFC 9457 problem details with precise status codes, not a blanket 400.</li></ul></div></section><section class="block wide" aria-labelledby="b-shots"><h2 id="b-shots" class="split">Screens</h2><div class="shots"><figure><img src="/assets/img/url-shortener-1-light-800.2f0e49b036.webp" srcset="/assets/img/url-shortener-1-light-800.2f0e49b036.webp 800w, /assets/img/url-shortener-1-light.fe22f3a524.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="733" alt="Architecture diagram of the URL shortener: a visitor request passes a Redis rate-limit filter to the redirect controller, UrlService reads Redis and falls back to PostgreSQL on a miss, clicks go through a Kafka topic to a click consumer; link owners use a JWT-protected URL API" loading="lazy" class="contain th-light"><img src="/assets/img/url-shortener-1-800.72859826ce.webp" srcset="/assets/img/url-shortener-1-800.72859826ce.webp 800w, /assets/img/url-shortener-1.7436c13c4e.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="733" alt="Architecture diagram of the URL shortener: a visitor request passes a Redis rate-limit filter to the redirect controller, UrlService reads Redis and falls back to PostgreSQL on a miss, clicks go through a Kafka topic to a click consumer; link owners use a JWT-protected URL API" loading="lazy" class="contain th-dark"><figcaption>Architecture diagram of the URL shortener.</figcaption></figure><figure><img src="/assets/img/url-shortener-2-light-800.69a1a54211.webp" srcset="/assets/img/url-shortener-2-light-800.69a1a54211.webp 800w, /assets/img/url-shortener-2-light.e655099b82.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="654" alt="Numbered redirect flow: GET /{code}, rate limit, resolve, Redis cache lookup, database lookup on a miss that warms the cache, click published to Kafka, then a 302 redirect" loading="lazy" class="contain th-light"><img src="/assets/img/url-shortener-2-800.5491ccbd41.webp" srcset="/assets/img/url-shortener-2-800.5491ccbd41.webp 800w, /assets/img/url-shortener-2.2a4dc23a20.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="654" alt="Numbered redirect flow: GET /{code}, rate limit, resolve, Redis cache lookup, database lookup on a miss that warms the cache, click published to Kafka, then a 302 redirect" loading="lazy" class="contain th-dark"><figcaption>Numbered redirect flow.</figcaption></figure></div></section><section class="block" aria-labelledby="b-stack"><h2 id="b-stack" class="split">Stack</h2><div><ul class="tags"><li>Java 21</li><li>Spring Boot 3</li><li>Spring Security (JWT)</li><li>Spring Data JPA</li><li>PostgreSQL</li><li>Redis</li><li>Apache Kafka</li><li>Flyway</li><li>JUnit 5</li><li>Testcontainers</li><li>Docker Compose</li><li>Prometheus</li><li>GitHub Actions</li></ul><div class="case-cta"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/url-shortener" data-repo="url-shortener">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a></div></div></section>
+    <a class="next" href="/work/code-collaborator/" data-case-link><small>Next project</small><b>Code Collaborator</b><span class="link">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></span></a>
+  </div>
+</main>
+<footer class="wrap"><div class="foot"><span>Neelmayank Rawat. B.Tech in Computer Science and Engineering, RCOEM Nagpur, 2023 to 2027.</span>
+<span><a href="https://github.com/rawatneelmayank1-sire" data-link="github">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/neelmayank-rawat-028886355/" data-link="linkedin">LinkedIn</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script><script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/js/site.2656d6d058.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">import { createField } from '/assets/js/field.645b8db74f.js';
+const host = document.querySelector('.case-head'), cv = host && host.querySelector('canvas');
+try { if (cv) { window.NR = window.NR || {}; NR.field = await createField({ canvas: cv, mode: 'single', shape: cv.dataset.shape, side: 'right', host }); } }
+catch (e) { document.documentElement.classList.add('no-gl'); }</script>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>{ const q = new URLSearchParams(location.search), d = document.documentElement;
+  if (q.has('static')) d.dataset.static = '';
+  if (q.has('reduce') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.dataset.motion = 'reduce';
+  try { const t = localStorage.getItem('nr-theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {} }
+/* every external link in one place: change the site URL here when the Netlify name is final */
+window.LINKS = { site: 'https://neelmayank-rawat.netlify.app', github: 'https://github.com/rawatneelmayank1-sire', linkedin: 'https://www.linkedin.com/in/neelmayank-rawat-028886355/',
+  email: 'mailto:rawatneelmayank1@gmail.com', repo: name => 'https://github.com/rawatneelmayank1-sire/' + name };</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TruthLens, case study</title>
+<meta name="description" content="TruthLens: A PDF question-answering assistant that fact-checks every sentence of its own answer.">
+<meta name="theme-color" content="#EEF0F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://neelmayank-rawat.netlify.app/work/truthlens/">
+<meta property="og:type" content="website"><meta property="og:title" content="TruthLens, case study"><meta property="og:description" content="TruthLens: A PDF question-answering assistant that fact-checks every sentence of its own answer."><meta property="og:url" content="https://neelmayank-rawat.netlify.app/work/truthlens/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A1D24'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C4472B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="/assets/css/site.9c5d8f7a8e.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" aria-label="Site"><div class="nav">
+  <a class="brand" href="/">Neelmayank Rawat</a>
+  <nav class="nav__links" aria-label="Sections"><a href="/#work">Work</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+  <div class="nav__end">
+    <button class="icon-btn pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><i class="ph ph-pause" aria-hidden="true"></i><span class="vh">Pause motion</span></button>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch theme"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn--solid magnetic" href="mailto:rawatneelmayank1@gmail.com" data-link="email" style="padding:0 20px">Email me</a>
+  </div>
+</div></header>
+<main id="main">
+  <header class="case-head">
+    <canvas aria-hidden="true" data-shape="pages"></canvas>
+    <div class="wrap case-head__in">
+      <p class="crumb load-in" style="--i:0"><a href="/#w-truthlens"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a><span aria-hidden="true">/</span><span>GenAI, RAG</span></p>
+      <h1 class="case-title" style="view-transition-name: t-truthlens">TruthLens</h1>
+      <p class="case-line load-in" style="--i:2">A PDF question-answering assistant that fact-checks every sentence of its own answer.</p>
+      <div class="case-cta load-in" style="--i:3"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/truthlens" data-repo="truthlens">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a><a class="btn magnetic" href="#b-problem">Skip to the problem</a></div>
+    </div>
+  </header>
+  <div class="wrap case-body">
+    <section class="block" aria-labelledby="b-problem"><h2 id="b-problem" class="split">Problem</h2><div class="prose"><p>RAG answers can still invent a number or a date. TruthLens checks itself and shows how much of each answer the document actually backs.</p></div></section><section class="block" aria-labelledby="b-does"><h2 id="b-does" class="split">What it does</h2><div><ul class="bullets"><li>Answers questions about an uploaded PDF with citations to numbered passages.</li><li>Judges every answer sentence as supported, partial or unsupported against the passages.</li><li>Rewrites or deletes flagged sentences, at most twice, then verifies again.</li><li>Returns a trust score: the share of supported sentences.</li><li>Shows the first draft next to the final answer, coloured by verdict.</li></ul></div></section><section class="block wide" aria-labelledby="b-arch"><h2 id="b-arch" class="split">Architecture</h2><div><p class=dia-note>Three Docker Compose services: a Streamlit UI, a FastAPI API and PostgreSQL 16 with pgvector. The LangGraph agent, retrieval and reranker all run inside the one API process.</p><div class="dia-wrap" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1150px" viewBox="4 10 1150 673" role="img" lang="en" aria-labelledby="d1-archify-diagram-title d1-archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
+        <title id="d1-archify-diagram-title">TruthLens architecture, numbered request path</title>
+        <desc id="d1-archify-diagram-description">Numbered request path: 1 user to Streamlit UI, 2 POST /ask to FastAPI, 3 run to the LangGraph agent, 4 retrieve to hybrid retrieval which uses 4a BM25 in memory, 4b pgvector cosine search and 4c the cross-encoder, 5 to 7 prompts to the LLM provider. Upload path: U1 PDF bytes from FastAPI to Ingest, U2 insert chunks into PostgreSQL.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d1-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d1-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d1-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d1-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d1-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Boundaries (behind everything) -->
+
+
+        <!-- Connection paths (before components for correct z-order) -->
+        <g data-graph-role="automatic-crossover" style="--step:0">
+          <path data-graph-role="automatic-crossover-underlay" d="M 180 72 L 310 72" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="user" data-edge-to="ui" data-edge-label="1 question" data-edge-key="0" data-edge-id="s1" data-composition-points="180,72;310,72" data-composition-crossover="halo" data-composition-independent="true" d="M 180 72 L 310 72" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:1">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 72 L 600 72" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="ui" data-edge-to="api" data-edge-label="2 POST /ask" data-edge-key="1" data-edge-id="s2" data-composition-points="470,72;600,72" data-composition-crossover="halo" data-composition-independent="true" d="M 470 72 L 600 72" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:2">
+          <path data-graph-role="automatic-crossover-underlay" d="M 680 104 L 680 210" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="api" data-edge-to="graph" data-edge-label="3 run(question, k)" data-edge-key="2" data-edge-id="s3" data-composition-points="680,104;680,210" data-composition-crossover="halo" data-composition-independent="true" d="M 680 104 L 680 210" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:3">
+          <path data-graph-role="automatic-crossover-underlay" d="M 760 242 L 890 242" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="graph" data-edge-to="llm" data-edge-label="5 to 7 prompts" data-edge-key="3" data-edge-id="s5" data-composition-points="760,242;890,242" data-composition-crossover="halo" data-composition-independent="true" d="M 760 242 L 890 242" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:4">
+          <path data-graph-role="automatic-crossover-underlay" d="M 680 274 L 680 380" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="graph" data-edge-to="retrieval" data-edge-label="4 retrieve()" data-edge-key="4" data-edge-id="s4" data-composition-points="680,274;680,380" data-composition-crossover="halo" data-composition-independent="true" d="M 680 274 L 680 380" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:5">
+          <path data-graph-role="automatic-crossover-underlay" d="M 600 412 L 470 412" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="retrieval" data-edge-to="bm25" data-edge-label="4a keywords" data-edge-key="5" data-edge-id="s4a" data-composition-points="600,412;470,412" data-composition-crossover="halo" data-composition-independent="true" d="M 600 412 L 470 412" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:6">
+          <path data-graph-role="automatic-crossover-underlay" d="M 760 412 L 890 412" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="retrieval" data-edge-to="rerank" data-edge-label="4c 20 pairs" data-edge-key="6" data-edge-id="s4c" data-composition-points="760,412;890,412" data-composition-crossover="halo" data-composition-independent="true" d="M 760 412 L 890 412" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:7">
+          <path data-graph-role="automatic-crossover-underlay" d="M 680 444 L 680 550" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="retrieval" data-edge-to="pg" data-edge-label="4b cosine top 20" data-edge-key="7" data-edge-id="s4b" data-composition-points="680,444;680,550" data-composition-crossover="halo" data-composition-independent="true" d="M 680 444 L 680 550" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <path data-edge-from="api" data-edge-to="ingest" data-edge-label="U1 PDF bytes" data-edge-key="8" data-edge-id="u1" data-composition-points="760,72;1090,72;1090,582;1050,582" d="M 760 72 L 1082 72 Q 1090 72 1090 80 L 1090 574 Q 1090 582 1082 582 L 1050 582" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        <g data-graph-role="automatic-crossover" style="--step:9">
+          <path data-graph-role="automatic-crossover-underlay" d="M 890 582 L 760 582" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="ingest" data-edge-to="pg" data-edge-label="U2 INSERT chunks" data-edge-key="9" data-edge-id="u2" data-composition-points="890,582;760,582" data-composition-crossover="halo" data-composition-independent="true" d="M 890 582 L 760 582" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+
+        <!-- Components -->
+        <g id="d1-node-user" data-node-id="user" data-node-label="User" aria-label="Focus User, browser, Architecture component" data-node-kind="external" data-node-sublabel="browser" data-node-context="Architecture component">
+          <title>User · browser · Architecture component</title>
+          <rect x="20" y="40" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="20" y="40" width="160" height="64" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(26 46) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="100" y="70" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">User</text>
+        <text data-detail="context" x="100" y="86" class="t-muted" font-size="12" text-anchor="middle">browser</text>
+        </g>
+
+        <g id="d1-node-ui" data-node-id="ui" data-node-label="Streamlit UI" aria-label="Focus Streamlit UI, ui/app.py :8501, Architecture component" data-node-kind="frontend" data-node-sublabel="ui/app.py :8501" data-node-context="Architecture component">
+          <title>Streamlit UI · ui/app.py :8501 · Architecture component</title>
+          <rect x="310" y="40" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="310" y="40" width="160" height="64" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(316 46) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="390" y="70" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Streamlit UI</text>
+        <text data-detail="context" x="390" y="86" class="t-muted" font-size="12" text-anchor="middle">ui/app.py :8501</text>
+        </g>
+
+        <g id="d1-node-api" data-node-id="api" data-node-label="FastAPI" aria-label="Focus FastAPI, app/api.py :8000, Architecture component" data-node-kind="backend" data-node-sublabel="app/api.py :8000" data-node-context="Architecture component">
+          <title>FastAPI · app/api.py :8000 · Architecture component</title>
+          <rect x="600" y="40" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="600" y="40" width="160" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(606 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="680" y="70" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">FastAPI</text>
+        <text data-detail="context" x="680" y="86" class="t-muted" font-size="12" text-anchor="middle">app/api.py :8000</text>
+        </g>
+
+        <g id="d1-node-graph" data-node-id="graph" data-node-label="LangGraph agent" aria-label="Focus LangGraph agent, app/graph.py, Architecture component" data-node-kind="backend" data-node-sublabel="app/graph.py" data-node-tag="H1" data-node-context="Architecture component">
+          <title>LangGraph agent · app/graph.py · Architecture component · H1</title>
+          <rect x="600" y="210" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="600" y="210" width="160" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(606 216) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="680" y="240" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">LangGraph agent</text>
+        <text data-detail="context" x="680" y="256" class="t-muted" font-size="12" text-anchor="middle">app/graph.py</text>
+        
+        </g>
+
+        <g id="d1-node-llm" data-node-id="llm" data-node-label="LLM provider" aria-label="Focus LLM provider, app/chat.py, Architecture component" data-node-kind="external" data-node-sublabel="app/chat.py" data-node-context="Architecture component">
+          <title>LLM provider · app/chat.py · Architecture component</title>
+          <rect x="890" y="210" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="890" y="210" width="160" height="64" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(896 216) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="970" y="240" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">LLM provider</text>
+        <text data-detail="context" x="970" y="256" class="t-muted" font-size="12" text-anchor="middle">app/chat.py</text>
+        </g>
+
+        <g id="d1-node-bm25" data-node-id="bm25" data-node-label="BM25 index" aria-label="Focus BM25 index, RAM, per file, Architecture component" data-node-kind="backend" data-node-sublabel="RAM, per file" data-node-tag="H3" data-node-context="Architecture component">
+          <title>BM25 index · RAM, per file · Architecture component · H3</title>
+          <rect x="310" y="380" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="310" y="380" width="160" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(316 386) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="390" y="410" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">BM25 index</text>
+        <text data-detail="context" x="390" y="426" class="t-muted" font-size="12" text-anchor="middle">RAM, per file</text>
+        
+        </g>
+
+        <g id="d1-node-retrieval" data-node-id="retrieval" data-node-label="Hybrid retrieval" aria-label="Focus Hybrid retrieval, app/retrieval.py, Architecture component" data-node-kind="backend" data-node-sublabel="app/retrieval.py" data-node-tag="H2" data-node-context="Architecture component">
+          <title>Hybrid retrieval · app/retrieval.py · Architecture component · H2</title>
+          <rect x="600" y="380" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="600" y="380" width="160" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(606 386) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="680" y="410" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Hybrid retrieval</text>
+        <text data-detail="context" x="680" y="426" class="t-muted" font-size="12" text-anchor="middle">app/retrieval.py</text>
+        
+        </g>
+
+        <g id="d1-node-rerank" data-node-id="rerank" data-node-label="Cross-encoder" aria-label="Focus Cross-encoder, app/rerank.py, Architecture component" data-node-kind="backend" data-node-sublabel="app/rerank.py" data-node-context="Architecture component">
+          <title>Cross-encoder · app/rerank.py · Architecture component</title>
+          <rect x="890" y="380" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="890" y="380" width="160" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(896 386) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="970" y="410" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Cross-encoder</text>
+        <text data-detail="context" x="970" y="426" class="t-muted" font-size="12" text-anchor="middle">app/rerank.py</text>
+        </g>
+
+        <g id="d1-node-pg" data-node-id="pg" data-node-label="PostgreSQL 16" aria-label="Focus PostgreSQL 16, pgvector, HNSW, Architecture component" data-node-kind="database" data-node-sublabel="pgvector, HNSW" data-node-context="Architecture component">
+          <title>PostgreSQL 16 · pgvector, HNSW · Architecture component</title>
+          <rect x="600" y="550" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="600" y="550" width="160" height="64" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(606 556) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="680" y="580" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">PostgreSQL 16</text>
+        <text data-detail="context" x="680" y="596" class="t-muted" font-size="12" text-anchor="middle">pgvector, HNSW</text>
+        </g>
+
+        <g id="d1-node-ingest" data-node-id="ingest" data-node-label="Ingest" aria-label="Focus Ingest, app/ingest.py, Architecture component" data-node-kind="backend" data-node-sublabel="app/ingest.py" data-node-context="Architecture component">
+          <title>Ingest · app/ingest.py · Architecture component</title>
+          <rect x="890" y="550" width="160" height="64" rx="6" class="c-mask"/>
+          <rect x="890" y="550" width="160" height="64" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(896 556) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="970" y="580" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Ingest</text>
+        <text data-detail="context" x="970" y="596" class="t-muted" font-size="12" text-anchor="middle">app/ingest.py</text>
+        </g>
+
+        <!-- Connection labels -->
+        <g data-detail="context" data-edge-from="user" data-edge-to="ui" data-edge-label="1 question" data-edge-key="0" data-edge-id="s1">
+          <rect x="204.0" y="49.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="245" y="62" class="t-edge-default" font-size="12" text-anchor="middle">1 question</text>
+        </g>
+        <g data-detail="context" data-edge-from="ui" data-edge-to="api" data-edge-label="2 POST /ask" data-edge-key="1" data-edge-id="s2">
+          <rect x="490.5" y="49.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="535" y="62" class="t-edge-emphasis" font-size="12" text-anchor="middle">2 POST /ask</text>
+        </g>
+        <g data-detail="context" data-edge-from="api" data-edge-to="graph" data-edge-label="3 run(question, k)" data-edge-key="2" data-edge-id="s3">
+          <rect x="556.8" y="147.0" width="138.0" height="18" rx="3" class="c-mask"/>
+          <text x="625.8" y="160" class="t-edge-emphasis" font-size="12" text-anchor="middle">3 run(question, k)</text>
+        </g>
+        <g data-detail="context" data-edge-from="graph" data-edge-to="llm" data-edge-label="5 to 7 prompts" data-edge-key="3" data-edge-id="s5">
+          <rect x="770.0" y="219.0" width="110.0" height="18" rx="3" class="c-mask"/>
+          <text x="825" y="232" class="t-edge-default" font-size="12" text-anchor="middle">5 to 7 prompts</text>
+        </g>
+        <g data-detail="context" data-edge-from="graph" data-edge-to="retrieval" data-edge-label="4 retrieve()" data-edge-key="4" data-edge-id="s4">
+          <rect x="592.2" y="317.0" width="96.0" height="18" rx="3" class="c-mask"/>
+          <text x="640.2" y="330" class="t-edge-emphasis" font-size="12" text-anchor="middle">4 retrieve()</text>
+        </g>
+        <g data-detail="context" data-edge-from="retrieval" data-edge-to="bm25" data-edge-label="4a keywords" data-edge-key="5" data-edge-id="s4a">
+          <rect x="490.5" y="389.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="535" y="402" class="t-edge-default" font-size="12" text-anchor="middle">4a keywords</text>
+        </g>
+        <g data-detail="context" data-edge-from="retrieval" data-edge-to="rerank" data-edge-label="4c 20 pairs" data-edge-key="6" data-edge-id="s4c">
+          <rect x="780.5" y="389.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="825" y="402" class="t-edge-default" font-size="12" text-anchor="middle">4c 20 pairs</text>
+        </g>
+        <g data-detail="context" data-edge-from="retrieval" data-edge-to="pg" data-edge-label="4b cosine top 20" data-edge-key="7" data-edge-id="s4b">
+          <rect x="568.6" y="487.0" width="124.0" height="18" rx="3" class="c-mask"/>
+          <text x="630.6" y="500" class="t-edge-default" font-size="12" text-anchor="middle">4b cosine top 20</text>
+        </g>
+        <g data-detail="context" data-edge-from="api" data-edge-to="ingest" data-edge-label="U1 PDF bytes" data-edge-key="8" data-edge-id="u1">
+          <rect x="1042.0" y="304.0" width="96.0" height="18" rx="3" class="c-mask"/>
+          <text x="1090" y="317" class="t-edge-dashed" font-size="12" text-anchor="middle">U1 PDF bytes</text>
+        </g>
+        <g data-detail="context" data-edge-from="ingest" data-edge-to="pg" data-edge-label="U2 INSERT chunks" data-edge-key="9" data-edge-id="u2">
+          <rect x="763.0" y="559.0" width="124.0" height="18" rx="3" class="c-mask"/>
+          <text x="825" y="572" class="t-edge-dashed" font-size="12" text-anchor="middle">U2 INSERT chunks</text>
+        </g>
+
+        <!-- Boundary labels (foreground masks keep routes out of titles) -->
+
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="646" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="Frontend" data-legend-x="40" data-legend-baseline="666" data-legend-width="83">
+            <rect x="40" y="657" width="16" height="10" rx="2.5" class="c-frontend" stroke-width="1"/>
+            <text x="62" y="666" class="t-muted" font-size="12" font-weight="500">Frontend</text>
+          </g>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="145" data-legend-baseline="666" data-legend-width="78">
+            <rect x="145" y="657" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="167" y="666" class="t-muted" font-size="12" font-weight="500">Backend</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="245" data-legend-baseline="666" data-legend-width="83">
+            <rect x="245" y="657" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="267" y="666" class="t-muted" font-size="12" font-weight="500">Database</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="350" data-legend-baseline="666" data-legend-width="83">
+            <rect x="350" y="657" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="372" y="666" class="t-muted" font-size="12" font-weight="500">External</text>
+          </g>
+        </g>
+      </svg></div></div></section><section class="block" aria-labelledby="b-how"><h2 id="b-how" class="split">How it works</h2><div><ol class="steps"><li><div><b>Ingest</b><p>PDF split into 1,200-character chunks with page numbers, embedded with bge-small, stored in PostgreSQL with pgvector.</p></div></li><li><div><b>Retrieve</b><p>Top 20 by vector and top 20 by BM25, merged with Reciprocal Rank Fusion.</p></div></li><li><div><b>Rerank</b><p>A MiniLM cross-encoder keeps the best 5, plus the rest of the top hit&#x27;s page.</p></div></li><li><div><b>Generate</b><p>The LLM answers only from numbered passages and cites them; no passages means a fixed refusal.</p></div></li><li><div><b>Verify</b><p>One judge call labels each sentence; Pydantic validates the verdicts, retrying bad JSON.</p></div></li><li><div><b>Rewrite</b><p>LangGraph keeps supported sentences, fixes or removes the rest, and stops after 2 rewrites.</p></div></li></ol></div></section><section class="block wide" aria-label="Flow diagram"><div class="dia-wrap" tabindex="0" role="region" aria-label="Step-by-step flow diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1126px" viewBox="24 22 1126 522" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="d2-archify-diagram-title d2-archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="d2-archify-diagram-title">One question through TruthLens, numbered steps</title>
+        <desc id="d2-archify-diagram-description">Steps 1 Ask and 2 Validate, then in the LangGraph agent 3 and 4 Retrieve, 5 Generate, 6 Verify, 7 Decide; flagged answers go to 8 Rewrite and back to Verify, at most twice; done answers go to 9 Respond and 10 Show.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d2-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d2-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d2-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d2-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d2-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Swimlanes -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="1103" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="74" class="t-dim" font-size="12" font-weight="600">01 / Streamlit UI</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="176" width="1103" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="198" class="t-dim" font-size="12" font-weight="600">02 / FastAPI, app/api.py</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="300" width="1103" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="322" class="t-dim" font-size="12" font-weight="600">03 / LangGraph agent, app/graph.py</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="424" width="1103" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-3-exception" x="46" y="430" width="1091" height="92" rx="8" class="c-security-group" stroke-width="1"/>
+        <text x="54" y="446" class="t-security" font-size="12" font-weight="600">EX / Rewrite loop, at most 2 rounds</text>
+
+        <!-- Phase headers -->
+
+
+        <!-- Workflow groups -->
+
+
+        <!-- Edge paths -->
+        <path data-edge-from="ask" data-edge-to="endpoint" data-edge-label="JSON" data-edge-key="0" data-edge-id="e1" data-edge-role="" data-composition-points="204.8,145;204.8,217" d="M 204.8 145 L 204.8 217" class="a-default" stroke-width="1.4" marker-end="url(#d2-arrowhead)"/>
+        <path data-edge-from="endpoint" data-edge-to="retrieve" data-edge-label="run()" data-edge-key="1" data-edge-id="e2" data-edge-role="" data-composition-points="279.8,243;324.8,243;324.8,341" d="M 279.8 243 L 324.8 243 L 324.8 341" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="retrieve" data-edge-to="generate" data-edge-label="5+ chunks" data-edge-key="2" data-edge-id="e3" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="399.8,367;461,367" d="M 399.8 367 L 461 367" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="generate" data-edge-to="verify" data-edge-label="draft" data-edge-key="3" data-edge-id="e4" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="611,367;653,367" d="M 611 367 L 653 367" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="verify" data-edge-to="gate" data-edge-label="verdicts" data-edge-key="4" data-edge-id="e5" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="803,367;859.4000000000001,367" d="M 803 367 L 859.4000000000001 367" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="gate" data-edge-to="respond" data-edge-label="done" data-edge-key="5" data-edge-id="e6" data-edge-role="" data-composition-points="1019.4000000000001,367;1059.4,367;1059.4,269" d="M 1019.4000000000001 367 L 1059.4 367 L 1059.4 269" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="respond" data-edge-to="show" data-edge-label="JSON" data-edge-key="6" data-edge-id="e7" data-edge-role="" data-composition-points="1059.4,217;1059.4,145" d="M 1059.4 217 L 1059.4 145" class="a-default" stroke-width="1.4" marker-end="url(#d2-arrowhead)"/>
+        <path data-edge-from="gate" data-edge-to="rewrite" data-edge-label="flagged" data-edge-key="7" data-edge-id="e8" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="939.4000000000001,393;939.4000000000001,465" d="M 939.4000000000001 393 L 939.4000000000001 465" class="a-security" stroke-width="1.4" marker-end="url(#d2-arrowhead-security)"/>
+        <path data-edge-from="rewrite" data-edge-to="verify" data-edge-label="new answer" data-edge-key="8" data-edge-id="e9" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="859.4000000000001,491;728,491;728,393" d="M 859.4000000000001 491 L 728 491 L 728 393" class="a-dashed" stroke-width="1.4" marker-end="url(#d2-arrowhead-dashed)"/>
+
+        <!-- Nodes -->
+        <g id="d2-node-ask" data-node-id="ask" data-node-label="1 Ask" aria-label="Focus 1 Ask, question, k, Streamlit UI" data-node-kind="frontend" data-node-sublabel="question, k" data-node-context="Streamlit UI">
+          <title>1 Ask · question, k · Streamlit UI</title>
+          <rect x="129.8" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="129.8" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(135.8 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="204.8" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">1 Ask</text>
+          <text data-detail="context" x="204.8" y="131" class="t-muted" font-size="12" text-anchor="middle">question, k</text>
+        </g>
+
+        <g id="d2-node-show" data-node-id="show" data-node-label="10 Show" aria-label="Focus 10 Show, colour per verdict, Streamlit UI" data-node-kind="frontend" data-node-sublabel="colour per verdict" data-node-context="Streamlit UI">
+          <title>10 Show · colour per verdict · Streamlit UI</title>
+          <rect x="984.4000000000001" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="984.4000000000001" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(990.4000000000001 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1059.4" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">10 Show</text>
+          <text data-detail="context" x="1059.4" y="131" class="t-muted" font-size="12" text-anchor="middle">colour per verdict</text>
+        </g>
+
+        <g id="d2-node-endpoint" data-node-id="endpoint" data-node-label="2 Validate" aria-label="Focus 2 Validate, ask(), daily cap, FastAPI, app/api.py" data-node-kind="backend" data-node-sublabel="ask(), daily cap" data-node-context="FastAPI, app/api.py">
+          <title>2 Validate · ask(), daily cap · FastAPI, app/api.py</title>
+          <rect x="129.8" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="129.8" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(135.8 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="204.8" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">2 Validate</text>
+          <text data-detail="context" x="204.8" y="255" class="t-muted" font-size="12" text-anchor="middle">ask(), daily cap</text>
+        </g>
+
+        <g id="d2-node-respond" data-node-id="respond" data-node-label="9 Respond" aria-label="Focus 9 Respond, AskResponse, FastAPI, app/api.py" data-node-kind="backend" data-node-sublabel="AskResponse" data-node-context="FastAPI, app/api.py">
+          <title>9 Respond · AskResponse · FastAPI, app/api.py</title>
+          <rect x="984.4000000000001" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="984.4000000000001" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(990.4000000000001 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1059.4" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">9 Respond</text>
+          <text data-detail="context" x="1059.4" y="255" class="t-muted" font-size="12" text-anchor="middle">AskResponse</text>
+        </g>
+
+        <g id="d2-node-retrieve" data-node-id="retrieve" data-node-label="3+4 Retrieve" aria-label="Focus 3+4 Retrieve, retrieve_node, LangGraph agent, app/graph.py" data-node-kind="backend" data-node-sublabel="retrieve_node" data-node-context="LangGraph agent, app/graph.py">
+          <title>3+4 Retrieve · retrieve_node · LangGraph agent, app/graph.py</title>
+          <rect x="249.8" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="249.8" y="341" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(255.8 347) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="324.8" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">3+4 Retrieve</text>
+          <text data-detail="context" x="324.8" y="379" class="t-muted" font-size="12" text-anchor="middle">retrieve_node</text>
+        </g>
+
+        <g id="d2-node-generate" data-node-id="generate" data-node-label="5 Generate" aria-label="Focus 5 Generate, generate_node, LangGraph agent, app/graph.py" data-node-kind="backend" data-node-sublabel="generate_node" data-node-context="LangGraph agent, app/graph.py">
+          <title>5 Generate · generate_node · LangGraph agent, app/graph.py</title>
+          <rect x="461" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="461" y="341" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(467 347) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="536" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">5 Generate</text>
+          <text data-detail="context" x="536" y="379" class="t-muted" font-size="12" text-anchor="middle">generate_node</text>
+        </g>
+
+        <g id="d2-node-verify" data-node-id="verify" data-node-label="6 Verify" aria-label="Focus 6 Verify, verify_node, LangGraph agent, app/graph.py" data-node-kind="security" data-node-sublabel="verify_node" data-node-context="LangGraph agent, app/graph.py">
+          <title>6 Verify · verify_node · LangGraph agent, app/graph.py</title>
+          <rect x="653" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="653" y="341" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(659 347) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="728" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">6 Verify</text>
+          <text data-detail="context" x="728" y="379" class="t-muted" font-size="12" text-anchor="middle">verify_node</text>
+        </g>
+
+        <g id="d2-node-gate" data-node-id="gate" data-node-label="7 Decide" aria-label="Focus 7 Decide, route_after_verify, LangGraph agent, app/graph.py" data-node-kind="security" data-node-sublabel="route_after_verify" data-node-context="LangGraph agent, app/graph.py">
+          <title>7 Decide · route_after_verify · LangGraph agent, app/graph.py</title>
+          <rect x="859.4000000000001" y="341" width="160" height="52" rx="6" class="c-mask"/>
+          <rect x="859.4000000000001" y="341" width="160" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(865.4000000000001 347) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="939.4000000000001" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">7 Decide</text>
+          <text data-detail="context" x="939.4000000000001" y="379" class="t-muted" font-size="12" text-anchor="middle">route_after_verify</text>
+        </g>
+
+        <g id="d2-node-rewrite" data-node-id="rewrite" data-node-label="8 Rewrite" aria-label="Focus 8 Rewrite, rewrite_node, Rewrite loop, at most 2 rounds" data-node-kind="messagebus" data-node-sublabel="rewrite_node" data-node-context="Rewrite loop, at most 2 rounds">
+          <title>8 Rewrite · rewrite_node · Rewrite loop, at most 2 rounds</title>
+          <rect x="859.4000000000001" y="465" width="160" height="52" rx="6" class="c-mask"/>
+          <rect x="859.4000000000001" y="465" width="160" height="52" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(865.4000000000001 471) scale(0.6875)">
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
+            <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
+            <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
+            <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="939.4000000000001" y="486" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">8 Rewrite</text>
+          <text data-detail="context" x="939.4000000000001" y="503" class="t-muted" font-size="12" text-anchor="middle">rewrite_node</text>
+        </g>
+
+        <!-- Edge labels -->
+        <g data-detail="context" data-edge-from="ask" data-edge-to="endpoint" data-edge-label="JSON" data-edge-key="0" data-edge-id="e1">
+          <rect x="184.8" y="168.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="204.8" y="181" class="t-edge-default" font-size="12" text-anchor="middle">JSON</text>
+        </g>
+        <g data-detail="context" data-edge-from="endpoint" data-edge-to="retrieve" data-edge-label="run()" data-edge-key="1" data-edge-id="e2">
+          <rect x="278.8" y="220.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="302.3" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">run()</text>
+        </g>
+        <g data-detail="context" data-edge-from="retrieve" data-edge-to="generate" data-edge-label="5+ chunks" data-edge-key="2" data-edge-id="e3">
+          <rect x="392.9" y="344.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="430.4" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">5+ chunks</text>
+        </g>
+        <g data-detail="context" data-edge-from="generate" data-edge-to="verify" data-edge-label="draft" data-edge-key="3" data-edge-id="e4">
+          <rect x="608.5" y="344.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="632" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">draft</text>
+        </g>
+        <g data-detail="context" data-edge-from="verify" data-edge-to="gate" data-edge-label="verdicts" data-edge-key="4" data-edge-id="e5">
+          <rect x="797.2" y="344.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="831.2" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">verdicts</text>
+        </g>
+        <g data-detail="context" data-edge-from="gate" data-edge-to="respond" data-edge-label="done" data-edge-key="5" data-edge-id="e6">
+          <rect x="1019.4" y="344.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="1039.4" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">done</text>
+        </g>
+        <g data-detail="context" data-edge-from="respond" data-edge-to="show" data-edge-label="JSON" data-edge-key="6" data-edge-id="e7">
+          <rect x="1039.4" y="168.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="1059.4" y="181" class="t-edge-default" font-size="12" text-anchor="middle">JSON</text>
+        </g>
+        <g data-detail="context" data-edge-from="gate" data-edge-to="rewrite" data-edge-label="flagged" data-edge-key="7" data-edge-id="e8">
+          <rect x="908.9" y="416.0" width="61.0" height="18" rx="3" class="c-mask"/>
+          <text x="939.4000000000001" y="429" class="t-edge-security" font-size="12" text-anchor="middle">flagged</text>
+        </g>
+        <g data-detail="context" data-edge-from="rewrite" data-edge-to="verify" data-edge-label="new answer" data-edge-key="8" data-edge-id="e9">
+          <rect x="752.7" y="468.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="793.7" y="481" class="t-edge-dashed" font-size="12" text-anchor="middle">new answer</text>
+        </g>
+
+        <!-- Legend -->
+
+      </svg></div></section><section class="block" aria-labelledby="b-res"><h2 id="b-res" class="split">Results</h2><div><dl class="results"><div><dt>planted false sentences detected and removed</dt><dd>10 / 10</dd></div><div><dt>answers graded correct against reference answers</dt><dd>25 / 26</dd></div><div><dt>unanswerable questions correctly refused</dt><dd>4 / 4</dd></div><div><dt>faithfulness over 26 answers, claim-level judge</dt><dd>1.00</dd></div></dl></div></section><section class="block" aria-labelledby="b-why"><h2 id="b-why" class="split">Design decisions</h2><div><ul class="bullets"><li>Fixing flagged sentences beats regenerating: good sentences stay untouched between rounds.</li><li>Same-page expansion fixed a list split across chunks, taking false refusals from 1 to 0.</li><li>CI fails the build if retrieval hit@5 drops below 0.85 or MRR below 0.55.</li></ul></div></section><section class="block wide" aria-labelledby="b-shots"><h2 id="b-shots" class="split">Screens</h2><div class="shots"><figure><img src="/assets/img/truthlens-1-800.9640d7937b.webp" srcset="/assets/img/truthlens-1-800.9640d7937b.webp 800w, /assets/img/truthlens-1.8d9c069abc.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="726" alt="TruthLens app with the planted-lie demo on: the first draft has one false sentence flagged NOT supported in red, and the trust score rises from 50% to 100% after one rewrite" loading="lazy"><figcaption>TruthLens app with the planted-lie demo on.</figcaption></figure><figure><img src="/assets/img/truthlens-2-800.9a45347935.webp" srcset="/assets/img/truthlens-2-800.9a45347935.webp 800w, /assets/img/truthlens-2.a384b0e472.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="724" alt="MLflow comparison of two truthlens-eval runs: correct rate 0.923 against 0.962, with average latency, rewrites and false-refusal rate side by side" loading="lazy"><figcaption>MLflow comparison of two truthlens-eval runs.</figcaption></figure><figure><img src="/assets/img/truthlens-3-800.12893006e9.webp" srcset="/assets/img/truthlens-3-800.12893006e9.webp 800w, /assets/img/truthlens-3.6b00dd3207.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="723" alt="MLflow parameters of two evaluation runs: bge-small embeddings, a cross-encoder reranker, hybrid retrieval, k of 5, 30 questions and 10 planted-lie checks" loading="lazy"><figcaption>MLflow parameters of two evaluation runs.</figcaption></figure></div></section><section class="block" aria-labelledby="b-stack"><h2 id="b-stack" class="split">Stack</h2><div><ul class="tags"><li>Python</li><li>LangGraph</li><li>FastAPI</li><li>PostgreSQL</li><li>pgvector</li><li>BM25</li><li>sentence-transformers</li><li>cross-encoder reranking</li><li>Groq / Gemini</li><li>Pydantic</li><li>Streamlit</li><li>MLflow</li><li>Docker Compose</li><li>GitHub Actions</li></ul><div class="case-cta"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/truthlens" data-repo="truthlens">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a></div></div></section>
+    <a class="next" href="/work/haulpulse/" data-case-link><small>Next project</small><b>HaulPulse</b><span class="link">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></span></a>
+  </div>
+</main>
+<footer class="wrap"><div class="foot"><span>Neelmayank Rawat. B.Tech in Computer Science and Engineering, RCOEM Nagpur, 2023 to 2027.</span>
+<span><a href="https://github.com/rawatneelmayank1-sire" data-link="github">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/neelmayank-rawat-028886355/" data-link="linkedin">LinkedIn</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script><script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/js/site.2656d6d058.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">import { createField } from '/assets/js/field.645b8db74f.js';
+const host = document.querySelector('.case-head'), cv = host && host.querySelector('canvas');
+try { if (cv) { window.NR = window.NR || {}; NR.field = await createField({ canvas: cv, mode: 'single', shape: cv.dataset.shape, side: 'right', host }); } }
+catch (e) { document.documentElement.classList.add('no-gl'); }</script>
+</body>
+</html>

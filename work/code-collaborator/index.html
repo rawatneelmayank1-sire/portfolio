@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>{ const q = new URLSearchParams(location.search), d = document.documentElement;
+  if (q.has('static')) d.dataset.static = '';
+  if (q.has('reduce') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.dataset.motion = 'reduce';
+  try { const t = localStorage.getItem('nr-theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {} }
+/* every external link in one place: change the site URL here when the Netlify name is final */
+window.LINKS = { site: 'https://neelmayank-rawat.netlify.app', github: 'https://github.com/rawatneelmayank1-sire', linkedin: 'https://www.linkedin.com/in/neelmayank-rawat-028886355/',
+  email: 'mailto:rawatneelmayank1@gmail.com', repo: name => 'https://github.com/rawatneelmayank1-sire/' + name };</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Code Collaborator, case study</title>
+<meta name="description" content="Code Collaborator: A shared browser code editor where concurrent edits merge cleanly and code runs for the whole room.">
+<meta name="theme-color" content="#EEF0F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://neelmayank-rawat.netlify.app/work/code-collaborator/">
+<meta property="og:type" content="website"><meta property="og:title" content="Code Collaborator, case study"><meta property="og:description" content="Code Collaborator: A shared browser code editor where concurrent edits merge cleanly and code runs for the whole room."><meta property="og:url" content="https://neelmayank-rawat.netlify.app/work/code-collaborator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A1D24'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C4472B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="/assets/css/site.9c5d8f7a8e.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" aria-label="Site"><div class="nav">
+  <a class="brand" href="/">Neelmayank Rawat</a>
+  <nav class="nav__links" aria-label="Sections"><a href="/#work">Work</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+  <div class="nav__end">
+    <button class="icon-btn pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><i class="ph ph-pause" aria-hidden="true"></i><span class="vh">Pause motion</span></button>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch theme"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn--solid magnetic" href="mailto:rawatneelmayank1@gmail.com" data-link="email" style="padding:0 20px">Email me</a>
+  </div>
+</div></header>
+<main id="main">
+  <header class="case-head">
+    <canvas aria-hidden="true" data-shape="braid"></canvas>
+    <div class="wrap case-head__in">
+      <p class="crumb load-in" style="--i:0"><a href="/#w-code-collaborator"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a><span aria-hidden="true">/</span><span>Real-time, full stack</span></p>
+      <h1 class="case-title" style="view-transition-name: t-code-collaborator">Code Collaborator</h1>
+      <p class="case-line load-in" style="--i:2">A shared browser code editor where concurrent edits merge cleanly and code runs for the whole room.</p>
+      <div class="case-cta load-in" style="--i:3"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/code-collaborator" data-repo="code-collaborator">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a><a class="btn magnetic" href="#b-problem">Skip to the problem</a></div>
+    </div>
+  </header>
+  <div class="wrap case-body">
+    <section class="block" aria-labelledby="b-problem"><h2 id="b-problem" class="split">Problem</h2><div class="prose"><p>The first version sent the whole file on every keystroke and the last message won. Edits vanished and cursors jumped.</p></div></section><section class="block" aria-labelledby="b-does"><h2 id="b-does" class="split">What it does</h2><div><ul class="bullets"><li>Lets users join a room by ID or invite link and edit code together live.</li><li>Merges concurrent edits with the Yjs CRDT and shows each participant&#x27;s cursor.</li><li>Saves each room&#x27;s state so a refresh or server restart keeps the code.</li><li>Runs JavaScript, Python, Java or C++ and shares the output with the room.</li></ul></div></section><section class="block wide" aria-labelledby="b-arch"><h2 id="b-arch" class="split">Architecture</h2><div><p class=dia-note>One Node.js process with Express and ws serves the run API, the Yjs WebSocket and the built React client. Run results reach every browser the same way edits do, through the shared document.</p><div class="dia-wrap" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1017px" viewBox="14 10 1017 479" role="img" lang="en" aria-labelledby="d1-archify-diagram-title d1-archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
+        <title id="d1-archify-diagram-title">Code Collaborator system overview</title>
+        <desc id="d1-archify-diagram-description">Numbered edit path: 1 Browser A edits go to useCollabRoom, 2 Yjs updates go to the server's Yjs socket, which 3a applies them to the RoomManager document and 3b broadcasts them to Browser B; 4 RoomManager saves snapshots to persistence. Run path: R1 POST run to the Express API, R2 run() in the run service, R3 execute on the runner, R4 result written back into the room document.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d1-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d1-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d1-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d1-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d1-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Boundaries (behind everything) -->
+
+
+        <!-- Connection paths (before components for correct z-order) -->
+        <g data-graph-role="automatic-crossover" style="--step:0">
+          <path data-graph-role="automatic-crossover-underlay" d="M 200 70 L 300 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="a" data-edge-to="hook" data-edge-label="1 edits" data-edge-key="0" data-edge-id="c1" data-composition-points="200,70;300,70" data-composition-crossover="halo" data-composition-independent="true" d="M 200 70 L 300 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:1">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 70 L 570 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="hook" data-edge-to="ws" data-edge-label="2 Yjs updates" data-edge-key="1" data-edge-id="c2" data-composition-points="470,70;570,70" data-composition-crossover="halo" data-composition-independent="true" d="M 470 70 L 570 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:2">
+          <path data-graph-role="automatic-crossover-underlay" d="M 740 70 L 840 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="ws" data-edge-to="b" data-edge-label="3b broadcast" data-edge-key="2" data-edge-id="c3" data-composition-points="740,70;840,70" data-composition-crossover="halo" data-composition-independent="true" d="M 740 70 L 840 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:3">
+          <path data-graph-role="automatic-crossover-underlay" d="M 655 100 L 655 200" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="ws" data-edge-to="rooms" data-edge-label="3a apply" data-edge-key="3" data-edge-id="c4" data-composition-points="655,100;655,200" data-composition-crossover="halo" data-composition-independent="true" d="M 655 100 L 655 200" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:4">
+          <path data-graph-role="automatic-crossover-underlay" d="M 740 230 L 840 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="rooms" data-edge-to="persist" data-edge-label="4 snapshot" data-edge-key="4" data-edge-id="c5" data-composition-points="740,230;840,230" data-composition-crossover="halo" data-composition-independent="true" d="M 740 230 L 840 230" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:5">
+          <path data-graph-role="automatic-crossover-underlay" d="M 385 100 L 385 200" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="hook" data-edge-to="api" data-edge-label="R1 POST run" data-edge-key="5" data-edge-id="c6" data-composition-points="385,100;385,200" data-composition-crossover="halo" data-composition-independent="true" d="M 385 100 L 385 200" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:6">
+          <path data-graph-role="automatic-crossover-underlay" d="M 385 260 L 385 360" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="api" data-edge-to="run" data-edge-label="R2 run()" data-edge-key="6" data-edge-id="c7" data-composition-points="385,260;385,360" data-composition-crossover="halo" data-composition-independent="true" d="M 385 260 L 385 360" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:7">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 397 L 570 397" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="run" data-edge-to="runner" data-edge-label="R3 execute" data-edge-key="7" data-edge-id="c8" data-composition-points="470,397;570,397" data-composition-crossover="halo" data-composition-independent="true" d="M 470 397 L 570 397" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:8">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 383 L 486 383 Q 494 383 494 375 L 494 292 Q 494 284 502 284 L 647 284 Q 655 284 655 276 L 655 260" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="run" data-edge-to="rooms" data-edge-label="R4 result" data-edge-key="8" data-edge-id="c9" data-composition-points="470,383;494,383;494,284;655,284;655,260" data-composition-crossover="halo" data-composition-independent="true" d="M 470 383 L 486 383 Q 494 383 494 375 L 494 292 Q 494 284 502 284 L 647 284 Q 655 284 655 276 L 655 260" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+
+        <!-- Components -->
+        <g id="d1-node-a" data-node-id="a" data-node-label="Browser A" aria-label="Focus Browser A, Monaco + y-monaco, Architecture component" data-node-kind="frontend" data-node-sublabel="Monaco + y-monaco" data-node-context="Architecture component">
+          <title>Browser A · Monaco + y-monaco · Architecture component</title>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(36 46) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="115" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Browser A</text>
+        <text data-detail="context" x="115" y="84" class="t-muted" font-size="12" text-anchor="middle">Monaco + y-monaco</text>
+        </g>
+
+        <g id="d1-node-hook" data-node-id="hook" data-node-label="useCollabRoom" aria-label="Focus useCollabRoom, Y.Doc + provider, Architecture component" data-node-kind="frontend" data-node-sublabel="Y.Doc + provider" data-node-context="Architecture component">
+          <title>useCollabRoom · Y.Doc + provider · Architecture component</title>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(306 46) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">useCollabRoom</text>
+        <text data-detail="context" x="385" y="84" class="t-muted" font-size="12" text-anchor="middle">Y.Doc + provider</text>
+        </g>
+
+        <g id="d1-node-ws" data-node-id="ws" data-node-label="Yjs socket" aria-label="Focus Yjs socket, yjsSocket.js, Architecture component" data-node-kind="backend" data-node-sublabel="yjsSocket.js" data-node-context="Architecture component">
+          <title>Yjs socket · yjsSocket.js · Architecture component</title>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Yjs socket</text>
+        <text data-detail="context" x="655" y="84" class="t-muted" font-size="12" text-anchor="middle">yjsSocket.js</text>
+        </g>
+
+        <g id="d1-node-b" data-node-id="b" data-node-label="Browser B" aria-label="Focus Browser B, same room, Architecture component" data-node-kind="frontend" data-node-sublabel="same room" data-node-context="Architecture component">
+          <title>Browser B · same room · Architecture component</title>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(846 46) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Browser B</text>
+        <text data-detail="context" x="925" y="84" class="t-muted" font-size="12" text-anchor="middle">same room</text>
+        </g>
+
+        <g id="d1-node-api" data-node-id="api" data-node-label="Express API" aria-label="Focus Express API, server/src/app.js, Architecture component" data-node-kind="backend" data-node-sublabel="server/src/app.js" data-node-context="Architecture component">
+          <title>Express API · server/src/app.js · Architecture component</title>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 206) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Express API</text>
+        <text data-detail="context" x="385" y="244" class="t-muted" font-size="12" text-anchor="middle">server/src/app.js</text>
+        </g>
+
+        <g id="d1-node-rooms" data-node-id="rooms" data-node-label="RoomManager" aria-label="Focus RoomManager, one Y.Doc per room, Architecture component" data-node-kind="backend" data-node-sublabel="one Y.Doc per room" data-node-tag="H1" data-node-context="Architecture component">
+          <title>RoomManager · one Y.Doc per room · Architecture component · H1</title>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 206) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">RoomManager</text>
+        <text data-detail="context" x="655" y="244" class="t-muted" font-size="12" text-anchor="middle">one Y.Doc per room</text>
+        
+        </g>
+
+        <g id="d1-node-persist" data-node-id="persist" data-node-label="Persistence" aria-label="Focus Persistence, files or SQLite, Architecture component" data-node-kind="database" data-node-sublabel="files or SQLite" data-node-tag="H2" data-node-context="Architecture component">
+          <title>Persistence · files or SQLite · Architecture component · H2</title>
+          <rect x="840" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="200" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(846 206) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Persistence</text>
+        <text data-detail="context" x="925" y="244" class="t-muted" font-size="12" text-anchor="middle">files or SQLite</text>
+        
+        </g>
+
+        <g id="d1-node-run" data-node-id="run" data-node-label="Run service" aria-label="Focus Run service, runService.js, Architecture component" data-node-kind="backend" data-node-sublabel="runService.js" data-node-tag="H3" data-node-context="Architecture component">
+          <title>Run service · runService.js · Architecture component · H3</title>
+          <rect x="300" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="360" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 366) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Run service</text>
+        <text data-detail="context" x="385" y="404" class="t-muted" font-size="12" text-anchor="middle">runService.js</text>
+        
+        </g>
+
+        <g id="d1-node-runner" data-node-id="runner" data-node-label="Runner" aria-label="Focus Runner, Piston or local, Architecture component" data-node-kind="external" data-node-sublabel="Piston or local" data-node-context="Architecture component">
+          <title>Runner · Piston or local · Architecture component</title>
+          <rect x="570" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="360" width="170" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(576 366) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Runner</text>
+        <text data-detail="context" x="655" y="404" class="t-muted" font-size="12" text-anchor="middle">Piston or local</text>
+        </g>
+
+        <!-- Connection labels -->
+        <g data-detail="context" data-edge-from="a" data-edge-to="hook" data-edge-label="1 edits" data-edge-key="0" data-edge-id="c1">
+          <rect x="219.5" y="47.0" width="61.0" height="18" rx="3" class="c-mask"/>
+          <text x="250" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">1 edits</text>
+        </g>
+        <g data-detail="context" data-edge-from="hook" data-edge-to="ws" data-edge-label="2 Yjs updates" data-edge-key="1" data-edge-id="c2">
+          <rect x="468.5" y="47.0" width="103.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">2 Yjs updates</text>
+        </g>
+        <g data-detail="context" data-edge-from="ws" data-edge-to="b" data-edge-label="3b broadcast" data-edge-key="2" data-edge-id="c3">
+          <rect x="742.0" y="47.0" width="96.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">3b broadcast</text>
+        </g>
+        <g data-detail="context" data-edge-from="ws" data-edge-to="rooms" data-edge-label="3a apply" data-edge-key="3" data-edge-id="c4">
+          <rect x="590.8" y="140.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="624.8" y="153" class="t-edge-emphasis" font-size="12" text-anchor="middle">3a apply</text>
+        </g>
+        <g data-detail="context" data-edge-from="rooms" data-edge-to="persist" data-edge-label="4 snapshot" data-edge-key="4" data-edge-id="c5">
+          <rect x="749.0" y="207.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="220" class="t-edge-dashed" font-size="12" text-anchor="middle">4 snapshot</text>
+        </g>
+        <g data-detail="context" data-edge-from="hook" data-edge-to="api" data-edge-label="R1 POST run" data-edge-key="5" data-edge-id="c6">
+          <rect x="303.1" y="140.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="347.6" y="153" class="t-edge-default" font-size="12" text-anchor="middle">R1 POST run</text>
+        </g>
+        <g data-detail="context" data-edge-from="api" data-edge-to="run" data-edge-label="R2 run()" data-edge-key="6" data-edge-id="c7">
+          <rect x="320.8" y="300.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="354.8" y="313" class="t-edge-default" font-size="12" text-anchor="middle">R2 run()</text>
+        </g>
+        <g data-detail="context" data-edge-from="run" data-edge-to="runner" data-edge-label="R3 execute" data-edge-key="7" data-edge-id="c8">
+          <rect x="479.0" y="404.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="417" class="t-edge-default" font-size="12" text-anchor="middle">R3 execute</text>
+        </g>
+        <g data-detail="context" data-edge-from="run" data-edge-to="rooms" data-edge-label="R4 result" data-edge-key="8" data-edge-id="c9">
+          <rect x="456.5" y="310.5" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="494" y="323.5" class="t-edge-dashed" font-size="12" text-anchor="middle">R4 result</text>
+        </g>
+
+        <!-- Boundary labels (foreground masks keep routes out of titles) -->
+
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="452" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="Frontend" data-legend-x="40" data-legend-baseline="472" data-legend-width="83">
+            <rect x="40" y="463" width="16" height="10" rx="2.5" class="c-frontend" stroke-width="1"/>
+            <text x="62" y="472" class="t-muted" font-size="12" font-weight="500">Frontend</text>
+          </g>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="145" data-legend-baseline="472" data-legend-width="78">
+            <rect x="145" y="463" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="167" y="472" class="t-muted" font-size="12" font-weight="500">Backend</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="245" data-legend-baseline="472" data-legend-width="83">
+            <rect x="245" y="463" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="267" y="472" class="t-muted" font-size="12" font-weight="500">Database</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="350" data-legend-baseline="472" data-legend-width="83">
+            <rect x="350" y="463" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="372" y="472" class="t-muted" font-size="12" font-weight="500">External</text>
+          </g>
+        </g>
+      </svg></div></div></section><section class="block" aria-labelledby="b-how"><h2 id="b-how" class="split">How it works</h2><div><ol class="steps"><li><div><b>Join</b><p>The client opens a Yjs WebSocket; the server checks origin, room name, display name and a 20-person limit.</p></div></li><li><div><b>Load</b><p>The room loads once; concurrent joins share the same load, so memory never holds two copies.</p></div></li><li><div><b>Type</b><p>Monaco edits a shared Y.Text and only the small update travels over the socket.</p></div></li><li><div><b>Merge and broadcast</b><p>The server applies each update to the room document and sends it to every other connection.</p></div></li><li><div><b>Save</b><p>A snapshot is written 750 ms after changes; idle rooms unload 30 s after the last person leaves.</p></div></li><li><div><b>Run</b><p>The server runs the code held in the document and writes the output back into it.</p></div></li></ol></div></section><section class="block wide" aria-label="Flow diagram"><div class="dia-wrap" tabindex="0" role="region" aria-label="Step-by-step flow diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:848px" viewBox="4 22 848 443" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="d2-archify-diagram-title d2-archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="d2-archify-diagram-title">One edit and one run in a room</title>
+        <desc id="d2-archify-diagram-description">Steps 1 join room over the Yjs WebSocket, 2 rooms.get() loads or reuses the document, 3 type in Monaco, 4 apply update and merge, 5 scheduleSave after a 750 ms debounce, 6 peers update, 7 run service, 8 output shown in every browser.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d2-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d2-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d2-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d2-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d2-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Swimlanes -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="804" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="74" class="t-dim" font-size="12" font-weight="600">01 / Browser</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="176" width="804" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="198" class="t-dim" font-size="12" font-weight="600">02 / Node server</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="300" width="804" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-2-exception" x="46" y="306" width="792" height="92" rx="8" class="c-security-group" stroke-width="1"/>
+        <text x="54" y="322" class="t-security" font-size="12" font-weight="600">EX / Persistence</text>
+
+        <!-- Phase headers -->
+
+
+        <!-- Workflow groups -->
+
+
+        <!-- Edge paths -->
+        <path data-edge-from="join" data-edge-to="load" data-edge-label="sync step 1" data-edge-key="0" data-edge-id="e1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="123,145;123,166;243,166;243,217" d="M 123 145 L 123 166 L 243 166 L 243 217" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="load" data-edge-to="type" data-edge-label="state" data-edge-key="1" data-edge-id="e2" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="318,243;363,243;363,145" d="M 318 243 L 363 243 L 363 145" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="type" data-edge-to="merge" data-edge-label="update" data-edge-key="2" data-edge-id="e3" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="438,119;483,119;483,217" d="M 438 119 L 483 119 L 483 217" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="merge" data-edge-to="peers" data-edge-label="broadcast" data-edge-key="3" data-edge-id="e4" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="507,217;507,166;603,166;603,145" d="M 507 217 L 507 166 L 603 166 L 603 145" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="peers" data-edge-to="runreq" data-edge-label="POST run" data-edge-key="4" data-edge-id="e5" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="627,145;627,243;686,243" d="M 627 145 L 627 243 L 686 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="runreq" data-edge-to="result" data-edge-label="result" data-edge-key="5" data-edge-id="e6" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="761,217;761,145" d="M 761 217 L 761 145" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="merge" data-edge-to="save" data-edge-label="changed" data-edge-key="6" data-edge-id="e7" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="476,269;476,341" d="M 476 269 L 476 341" class="a-security" stroke-width="1.4" marker-end="url(#d2-arrowhead-security)"/>
+        <path data-edge-from="save" data-edge-to="merge" data-edge-label="saved" data-edge-key="7" data-edge-id="e8" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="558,367;574,367;574,290;507,290;507,269" d="M 558 367 L 574 367 L 574 290 L 507 290 L 507 269" class="a-dashed" stroke-width="1.4" marker-end="url(#d2-arrowhead-dashed)"/>
+
+        <!-- Nodes -->
+        <g id="d2-node-join" data-node-id="join" data-node-label="1 Join room" aria-label="Focus 1 Join room, WebSocket /yjs, Browser" data-node-kind="frontend" data-node-sublabel="WebSocket /yjs" data-node-context="Browser">
+          <title>1 Join room · WebSocket /yjs · Browser</title>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(54 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="123" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">1 Join room</text>
+          <text data-detail="context" x="123" y="131" class="t-muted" font-size="12" text-anchor="middle">WebSocket /yjs</text>
+        </g>
+
+        <g id="d2-node-type" data-node-id="type" data-node-label="3 Type in Monaco" aria-label="Focus 3 Type in Monaco, Y.Text update, Browser" data-node-kind="frontend" data-node-sublabel="Y.Text update" data-node-context="Browser">
+          <title>3 Type in Monaco · Y.Text update · Browser</title>
+          <rect x="288" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="288" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(294 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="363" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">3 Type in Monaco</text>
+          <text data-detail="context" x="363" y="131" class="t-muted" font-size="12" text-anchor="middle">Y.Text update</text>
+        </g>
+
+        <g id="d2-node-peers" data-node-id="peers" data-node-label="6 Peers update" aria-label="Focus 6 Peers update, text + cursors, Browser" data-node-kind="frontend" data-node-sublabel="text + cursors" data-node-context="Browser">
+          <title>6 Peers update · text + cursors · Browser</title>
+          <rect x="528" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="528" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(534 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="603" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">6 Peers update</text>
+          <text data-detail="context" x="603" y="131" class="t-muted" font-size="12" text-anchor="middle">text + cursors</text>
+        </g>
+
+        <g id="d2-node-result" data-node-id="result" data-node-label="8 Output shown" aria-label="Focus 8 Output shown, run map in doc, Browser" data-node-kind="frontend" data-node-sublabel="run map in doc" data-node-context="Browser">
+          <title>8 Output shown · run map in doc · Browser</title>
+          <rect x="686" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="686" y="93" width="150" height="52" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(692 99) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="761" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">8 Output shown</text>
+          <text data-detail="context" x="761" y="131" class="t-muted" font-size="12" text-anchor="middle">run map in doc</text>
+        </g>
+
+        <g id="d2-node-load" data-node-id="load" data-node-label="2 rooms.get()" aria-label="Focus 2 rooms.get(), load or reuse, Node server" data-node-kind="backend" data-node-sublabel="load or reuse" data-node-context="Node server">
+          <title>2 rooms.get() · load or reuse · Node server</title>
+          <rect x="168" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="168" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(174 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="243" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">2 rooms.get()</text>
+          <text data-detail="context" x="243" y="255" class="t-muted" font-size="12" text-anchor="middle">load or reuse</text>
+        </g>
+
+        <g id="d2-node-merge" data-node-id="merge" data-node-label="4 Apply update" aria-label="Focus 4 Apply update, CRDT merge, Node server" data-node-kind="backend" data-node-sublabel="CRDT merge" data-node-context="Node server">
+          <title>4 Apply update · CRDT merge · Node server</title>
+          <rect x="408" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="408" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(414 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="483" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">4 Apply update</text>
+          <text data-detail="context" x="483" y="255" class="t-muted" font-size="12" text-anchor="middle">CRDT merge</text>
+        </g>
+
+        <g id="d2-node-runreq" data-node-id="runreq" data-node-label="7 Run service" aria-label="Focus 7 Run service, 1 run, 10 per min, Node server" data-node-kind="security" data-node-sublabel="1 run, 10 per min" data-node-context="Node server">
+          <title>7 Run service · 1 run, 10 per min · Node server</title>
+          <rect x="686" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="686" y="217" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(692 223) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="761" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">7 Run service</text>
+          <text data-detail="context" x="761" y="255" class="t-muted" font-size="12" text-anchor="middle">1 run, 10 per min</text>
+        </g>
+
+        <g id="d2-node-save" data-node-id="save" data-node-label="5 scheduleSave" aria-label="Focus 5 scheduleSave, 750 ms debounce, Persistence" data-node-kind="database" data-node-sublabel="750 ms debounce" data-node-context="Persistence">
+          <title>5 scheduleSave · 750 ms debounce · Persistence</title>
+          <rect x="408" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="408" y="341" width="150" height="52" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(414 347) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="483" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">5 scheduleSave</text>
+          <text data-detail="context" x="483" y="379" class="t-muted" font-size="12" text-anchor="middle">750 ms debounce</text>
+        </g>
+
+        <!-- Edge labels -->
+        <g data-detail="context" data-edge-from="join" data-edge-to="load" data-edge-label="sync step 1" data-edge-key="0" data-edge-id="e1">
+          <rect x="138.5" y="143.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="183" y="156" class="t-edge-emphasis" font-size="12" text-anchor="middle">sync step 1</text>
+        </g>
+        <g data-detail="context" data-edge-from="load" data-edge-to="type" data-edge-label="state" data-edge-key="1" data-edge-id="e2">
+          <rect x="317.0" y="220.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="340.5" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">state</text>
+        </g>
+        <g data-detail="context" data-edge-from="type" data-edge-to="merge" data-edge-label="update" data-edge-key="2" data-edge-id="e3">
+          <rect x="433.5" y="96.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="460.5" y="109" class="t-edge-emphasis" font-size="12" text-anchor="middle">update</text>
+        </g>
+        <g data-detail="context" data-edge-from="merge" data-edge-to="peers" data-edge-label="broadcast" data-edge-key="3" data-edge-id="e4">
+          <rect x="517.5" y="143.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="555" y="156" class="t-edge-emphasis" font-size="12" text-anchor="middle">broadcast</text>
+        </g>
+        <g data-detail="context" data-edge-from="peers" data-edge-to="runreq" data-edge-label="POST run" data-edge-key="4" data-edge-id="e5">
+          <rect x="622.5" y="220.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="656.5" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">POST run</text>
+        </g>
+        <g data-detail="context" data-edge-from="runreq" data-edge-to="result" data-edge-label="result" data-edge-key="5" data-edge-id="e6">
+          <rect x="734.0" y="168.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="761" y="181" class="t-edge-emphasis" font-size="12" text-anchor="middle">result</text>
+        </g>
+        <g data-detail="context" data-edge-from="merge" data-edge-to="save" data-edge-label="changed" data-edge-key="6" data-edge-id="e7">
+          <rect x="445.5" y="292.0" width="61.0" height="18" rx="3" class="c-mask"/>
+          <text x="476" y="305" class="t-edge-security" font-size="12" text-anchor="middle">changed</text>
+        </g>
+        <g data-detail="context" data-edge-from="save" data-edge-to="merge" data-edge-label="saved" data-edge-key="7" data-edge-id="e8">
+          <rect x="517.0" y="267.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="540.5" y="280" class="t-edge-dashed" font-size="12" text-anchor="middle">saved</text>
+        </g>
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="20" y="428" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="User UI" data-legend-x="20" data-legend-baseline="448" data-legend-width="74">
+            <rect x="20" y="440" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="448" class="t-muted" font-size="12" font-weight="500">User UI</text>
+          </g>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Agent logic" data-legend-x="101" data-legend-baseline="448" data-legend-width="91">
+            <rect x="101" y="440" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="123" y="448" class="t-muted" font-size="12" font-weight="500">Agent logic</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Policy" data-legend-x="199" data-legend-baseline="448" data-legend-width="70">
+            <rect x="199" y="440" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="221" y="448" class="t-muted" font-size="12" font-weight="500">Policy</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Context / trace" data-legend-x="276" data-legend-baseline="448" data-legend-width="109">
+            <rect x="276" y="440" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="298" y="448" class="t-muted" font-size="12" font-weight="500">Context / trace</text>
+          </g>
+        </g>
+      </svg></div></section><section class="block" aria-labelledby="b-res"><h2 id="b-res" class="split">Results</h2><div><dl class="results"><div><dt>server tests passed, including two real WebSocket clients typing at once</dt><dd>35 / 35</dd></div><div><dt>client tests passed</dt><dd>12 / 12</dd></div><div><dt>languages runnable: JavaScript, Python, Java, C++</dt><dd>4</dd></div></dl></div></section><section class="block" aria-labelledby="b-why"><h2 id="b-why" class="split">Design decisions</h2><div><ul class="bullets"><li>Rebuilt syncing on a CRDT so every copy converges, instead of last-write-wins.</li><li>Code is read from the shared document, not the request, so the room runs what it sees.</li><li>Pluggable runner: self-hosted Piston sandbox or a local runner, with a plain error if none is reachable.</li></ul></div></section><section class="block wide" aria-labelledby="b-shots"><h2 id="b-shots" class="split">Screens</h2><div class="shots"><figure><img src="/assets/img/code-collaborator-1-light-800.71db25110a.webp" srcset="/assets/img/code-collaborator-1-light-800.71db25110a.webp 800w, /assets/img/code-collaborator-1-light.e61ae0128c.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="733" alt="Architecture diagram of the real-time code collaborator: Monaco editors in two browsers share a Yjs document through a WebSocket server and a room manager with snapshot persistence; code runs go through an Express API and a run service to a sandboxed runner" loading="lazy" class="contain th-light"><img src="/assets/img/code-collaborator-1-800.0994dde5fa.webp" srcset="/assets/img/code-collaborator-1-800.0994dde5fa.webp 800w, /assets/img/code-collaborator-1.0d6ad5140a.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="733" alt="Architecture diagram of the real-time code collaborator: Monaco editors in two browsers share a Yjs document through a WebSocket server and a room manager with snapshot persistence; code runs go through an Express API and a run service to a sandboxed runner" loading="lazy" class="contain th-dark"><figcaption>Architecture diagram of the real-time code collaborator.</figcaption></figure><figure><img src="/assets/img/code-collaborator-2-light-800.1d6dd0a97c.webp" srcset="/assets/img/code-collaborator-2-light-800.1d6dd0a97c.webp 800w, /assets/img/code-collaborator-2-light.3158c28530.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="795" alt="Numbered flow of a collaborative edit: join a room over WebSocket, type in Monaco, the server merges the Yjs update and broadcasts to peers, a debounced save persists it, and a code run returns output to everyone" loading="lazy" class="contain th-light"><img src="/assets/img/code-collaborator-2-800.3919623e9a.webp" srcset="/assets/img/code-collaborator-2-800.3919623e9a.webp 800w, /assets/img/code-collaborator-2.b5c32b9020.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="795" alt="Numbered flow of a collaborative edit: join a room over WebSocket, type in Monaco, the server merges the Yjs update and broadcasts to peers, a debounced save persists it, and a code run returns output to everyone" loading="lazy" class="contain th-dark"><figcaption>Numbered flow of a collaborative edit.</figcaption></figure></div></section><section class="block" aria-labelledby="b-stack"><h2 id="b-stack" class="split">Stack</h2><div><ul class="tags"><li>React</li><li>Vite</li><li>Monaco Editor</li><li>Yjs</li><li>y-monaco</li><li>Node.js</li><li>Express</li><li>WebSockets</li><li>SQLite</li><li>Piston</li><li>Vitest</li></ul><div class="case-cta"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/code-collaborator" data-repo="code-collaborator">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a></div></div></section>
+    <a class="next" href="/work/patient-readmission-platform/" data-case-link><small>Next project</small><b>Readmission risk</b><span class="link">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></span></a>
+  </div>
+</main>
+<footer class="wrap"><div class="foot"><span>Neelmayank Rawat. B.Tech in Computer Science and Engineering, RCOEM Nagpur, 2023 to 2027.</span>
+<span><a href="https://github.com/rawatneelmayank1-sire" data-link="github">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/neelmayank-rawat-028886355/" data-link="linkedin">LinkedIn</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script><script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/js/site.2656d6d058.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">import { createField } from '/assets/js/field.645b8db74f.js';
+const host = document.querySelector('.case-head'), cv = host && host.querySelector('canvas');
+try { if (cv) { window.NR = window.NR || {}; NR.field = await createField({ canvas: cv, mode: 'single', shape: cv.dataset.shape, side: 'right', host }); } }
+catch (e) { document.documentElement.classList.add('no-gl'); }</script>
+</body>
+</html>

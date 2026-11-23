@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>{ const q = new URLSearchParams(location.search), d = document.documentElement;
+  if (q.has('static')) d.dataset.static = '';
+  if (q.has('reduce') || matchMedia('(prefers-reduced-motion: reduce)').matches) d.dataset.motion = 'reduce';
+  try { const t = localStorage.getItem('nr-theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {} }
+/* every external link in one place: change the site URL here when the Netlify name is final */
+window.LINKS = { site: 'https://neelmayank-rawat.netlify.app', github: 'https://github.com/rawatneelmayank1-sire', linkedin: 'https://www.linkedin.com/in/neelmayank-rawat-028886355/',
+  email: 'mailto:rawatneelmayank1@gmail.com', repo: name => 'https://github.com/rawatneelmayank1-sire/' + name };</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HaulPulse, case study</title>
+<meta name="description" content="HaulPulse: A daily batch pipeline that loads messy delivery-trip files and proves it caught every defect.">
+<meta name="theme-color" content="#EEF0F3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121418" media="(prefers-color-scheme: dark)">
+<link rel="canonical" href="https://neelmayank-rawat.netlify.app/work/haulpulse/">
+<meta property="og:type" content="website"><meta property="og:title" content="HaulPulse, case study"><meta property="og:description" content="HaulPulse: A daily batch pipeline that loads messy delivery-trip files and proves it caught every defect."><meta property="og:url" content="https://neelmayank-rawat.netlify.app/work/haulpulse/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231A1D24'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23C4472B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css">
+<link rel="stylesheet" href="/assets/css/site.9c5d8f7a8e.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar" aria-label="Site"><div class="nav">
+  <a class="brand" href="/">Neelmayank Rawat</a>
+  <nav class="nav__links" aria-label="Sections"><a href="/#work">Work</a><a href="/#about">About</a><a href="/#contact">Contact</a></nav>
+  <div class="nav__end">
+    <button class="icon-btn pause" id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><i class="ph ph-pause" aria-hidden="true"></i><span class="vh">Pause motion</span></button>
+    <button class="icon-btn" id="theme" type="button" aria-label="Switch theme"><i class="ph ph-moon" aria-hidden="true"></i></button>
+    <a class="btn btn--solid magnetic" href="mailto:rawatneelmayank1@gmail.com" data-link="email" style="padding:0 20px">Email me</a>
+  </div>
+</div></header>
+<main id="main">
+  <header class="case-head">
+    <canvas aria-hidden="true" data-shape="streams"></canvas>
+    <div class="wrap case-head__in">
+      <p class="crumb load-in" style="--i:0"><a href="/#w-haulpulse"><i class="ph ph-arrow-left" aria-hidden="true"></i>All work</a><span aria-hidden="true">/</span><span>Data engineering</span></p>
+      <h1 class="case-title" style="view-transition-name: t-haulpulse">HaulPulse</h1>
+      <p class="case-line load-in" style="--i:2">A daily batch pipeline that loads messy delivery-trip files and proves it caught every defect.</p>
+      <div class="case-cta load-in" style="--i:3"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/haulpulse" data-repo="haulpulse">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a><a class="btn magnetic" href="#b-problem">Skip to the problem</a></div>
+    </div>
+  </header>
+  <div class="wrap case-body">
+    <section class="block" aria-labelledby="b-problem"><h2 id="b-problem" class="split">Problem</h2><div class="prose"><p>Delivery trip files arrive dirty and late. KPIs built on them are wrong unless every bad row is caught and explained.</p></div></section><section class="block" aria-labelledby="b-does"><h2 id="b-does" class="split">What it does</h2><div><ul class="bullets"><li>Loads about 5,000 synthetic last-mile trips a day into PostgreSQL bronze, silver and gold layers.</li><li>Checks every row against 16 validation rules and quarantines rejects with every reason.</li><li>Builds a dbt star schema with SCD Type 2 driver history and 3 KPI marts.</li><li>Reconciles quarantine counts against a manifest of injected defects.</li><li>Shows city demand, drivers and pipeline health in a Streamlit dashboard.</li></ul></div></section><section class="block wide" aria-labelledby="b-arch"><h2 id="b-arch" class="split">Architecture</h2><div><p class=dia-note>One PostgreSQL database with five schemas: Python handles bronze and silver, dbt builds gold, Streamlit reads analytics and Airflow schedules everything. Every task writes load logs, run rows and alerts to an ops schema.</p><div class="dia-wrap" tabindex="0" role="region" aria-label="Architecture diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1017px" viewBox="14 10 1017 639" role="img" lang="en" aria-labelledby="d1-archify-diagram-title d1-archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
+        <title id="d1-archify-diagram-title">HaulPulse system overview</title>
+        <desc id="d1-archify-diagram-description">Numbered data path: 1 generator writes daily CSV files, 2 COPY into the bronze loader, 3 replace the file's rows in the raw schema, 4 silver step reads them, 5 rejects go to quarantine, 6 clean rows are upserted into staging, 7 staging is the dbt source, 8 dbt builds the analytics schema, 9 Streamlit queries it with SQL. Reconcile reads R1 the manifest and R2 the quarantine counts. Airflow schedules the run.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d1-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d1-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d1-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d1-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d1-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Boundaries (behind everything) -->
+
+
+        <!-- Connection paths (before components for correct z-order) -->
+        <g data-graph-role="automatic-crossover" style="--step:0">
+          <path data-graph-role="automatic-crossover-underlay" d="M 200 70 L 300 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="gen" data-edge-to="files" data-edge-label="1 writes" data-edge-key="0" data-edge-id="c1" data-composition-points="200,70;300,70" data-composition-crossover="halo" data-composition-independent="true" d="M 200 70 L 300 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:1">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 70 L 570 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="files" data-edge-to="bronze" data-edge-label="2 COPY" data-edge-key="1" data-edge-id="c2" data-composition-points="470,70;570,70" data-composition-crossover="halo" data-composition-independent="true" d="M 470 70 L 570 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:2">
+          <path data-graph-role="automatic-crossover-underlay" d="M 740 70 L 840 70" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="bronze" data-edge-to="raw" data-edge-label="3 replace file" data-edge-key="2" data-edge-id="c3" data-composition-points="740,70;840,70" data-composition-crossover="halo" data-composition-independent="true" d="M 740 70 L 840 70" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:3">
+          <path data-graph-role="automatic-crossover-underlay" d="M 925 100 L 925 200" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="raw" data-edge-to="silver" data-edge-label="4 reads" data-edge-key="3" data-edge-id="c4" data-composition-points="925,100;925,200" data-composition-crossover="halo" data-composition-independent="true" d="M 925 100 L 925 200" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:4">
+          <path data-graph-role="automatic-crossover-underlay" d="M 840 230 L 740 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="silver" data-edge-to="quar" data-edge-label="5 rejects" data-edge-key="4" data-edge-id="c5" data-composition-points="840,230;740,230" data-composition-crossover="halo" data-composition-independent="true" d="M 840 230 L 740 230" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:5">
+          <path data-graph-role="automatic-crossover-underlay" d="M 925 260 L 925 360" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="silver" data-edge-to="staging" data-edge-label="6 upsert" data-edge-key="5" data-edge-id="c6" data-composition-points="925,260;925,360" data-composition-crossover="halo" data-composition-independent="true" d="M 925 260 L 925 360" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:6">
+          <path data-graph-role="automatic-crossover-underlay" d="M 925 420 L 925 520" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="staging" data-edge-to="dbt" data-edge-label="7 source" data-edge-key="6" data-edge-id="c7" data-composition-points="925,420;925,520" data-composition-crossover="halo" data-composition-independent="true" d="M 925 420 L 925 520" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:7">
+          <path data-graph-role="automatic-crossover-underlay" d="M 840 550 L 740 550" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="dbt" data-edge-to="gold" data-edge-label="8 builds" data-edge-key="7" data-edge-id="c8" data-composition-points="840,550;740,550" data-composition-crossover="halo" data-composition-independent="true" d="M 840 550 L 740 550" class="a-emphasis" stroke-width="1.8" marker-end="url(#d1-arrowhead-emphasis)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:8">
+          <path data-graph-role="automatic-crossover-underlay" d="M 570 550 L 470 550" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="gold" data-edge-to="dash" data-edge-label="9 SQL" data-edge-key="8" data-edge-id="c9" data-composition-points="570,550;470,550" data-composition-crossover="halo" data-composition-independent="true" d="M 570 550 L 470 550" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:9">
+          <path data-graph-role="automatic-crossover-underlay" d="M 470 230 L 570 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="recon" data-edge-to="quar" data-edge-label="R2 counts" data-edge-key="9" data-edge-id="c10" data-composition-points="470,230;570,230" data-composition-crossover="halo" data-composition-independent="true" d="M 470 230 L 570 230" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:10">
+          <path data-graph-role="automatic-crossover-underlay" d="M 385 200 L 385 100" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="recon" data-edge-to="files" data-edge-label="R1 manifest" data-edge-key="10" data-edge-id="c11" data-composition-points="385,200;385,100" data-composition-crossover="halo" data-composition-independent="true" d="M 385 200 L 385 100" class="a-default" stroke-width="1.5" marker-end="url(#d1-arrowhead)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:11">
+          <path data-graph-role="automatic-crossover-underlay" d="M 115 200 L 115 100" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="airflow" data-edge-to="gen" data-edge-label="schedules" data-edge-key="11" data-edge-id="c12" data-composition-points="115,200;115,100" data-composition-crossover="halo" data-composition-independent="true" d="M 115 200 L 115 100" class="a-dashed" stroke-width="1.5" marker-end="url(#d1-arrowhead-dashed)"/>
+        </g>
+
+        <!-- Components -->
+        <g id="d1-node-gen" data-node-id="gen" data-node-label="Generator" aria-label="Focus Generator, generator/generate.py, Architecture component" data-node-kind="backend" data-node-sublabel="generator/generate.py" data-node-context="Architecture component">
+          <title>Generator · generator/generate.py · Architecture component</title>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="30" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(36 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="115" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Generator</text>
+        <text data-detail="context" x="115" y="84" class="t-muted" font-size="12" text-anchor="middle">generator/generate.py</text>
+        </g>
+
+        <g id="d1-node-files" data-node-id="files" data-node-label="Daily CSV files" aria-label="Focus Daily CSV files, data/raw + manifest, Architecture component" data-node-kind="database" data-node-sublabel="data/raw + manifest" data-node-context="Architecture component">
+          <title>Daily CSV files · data/raw + manifest · Architecture component</title>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="40" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(306 46) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Daily CSV files</text>
+        <text data-detail="context" x="385" y="84" class="t-muted" font-size="12" text-anchor="middle">data/raw + manifest</text>
+        </g>
+
+        <g id="d1-node-bronze" data-node-id="bronze" data-node-label="Bronze loader" aria-label="Focus Bronze loader, load_bronze.py, Architecture component" data-node-kind="backend" data-node-sublabel="load_bronze.py" data-node-context="Architecture component">
+          <title>Bronze loader · load_bronze.py · Architecture component</title>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="40" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(576 46) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Bronze loader</text>
+        <text data-detail="context" x="655" y="84" class="t-muted" font-size="12" text-anchor="middle">load_bronze.py</text>
+        </g>
+
+        <g id="d1-node-raw" data-node-id="raw" data-node-label="raw schema" aria-label="Focus raw schema, all columns text, Architecture component" data-node-kind="database" data-node-sublabel="all columns text" data-node-context="Architecture component">
+          <title>raw schema · all columns text · Architecture component</title>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="40" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(846 46) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="68" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">raw schema</text>
+        <text data-detail="context" x="925" y="84" class="t-muted" font-size="12" text-anchor="middle">all columns text</text>
+        </g>
+
+        <g id="d1-node-airflow" data-node-id="airflow" data-node-label="Airflow DAG" aria-label="Focus Airflow DAG, 10 tasks, @daily, Architecture component" data-node-kind="external" data-node-sublabel="10 tasks, @daily" data-node-context="Architecture component">
+          <title>Airflow DAG · 10 tasks, @daily · Architecture component</title>
+          <rect x="30" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="30" y="200" width="170" height="60" rx="6" class="c-external" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(36 206) scale(0.6875)">
+            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
+            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="115" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Airflow DAG</text>
+        <text data-detail="context" x="115" y="244" class="t-muted" font-size="12" text-anchor="middle">10 tasks, @daily</text>
+        </g>
+
+        <g id="d1-node-recon" data-node-id="recon" data-node-label="Reconcile" aria-label="Focus Reconcile, reconcile.py, Architecture component" data-node-kind="backend" data-node-sublabel="reconcile.py" data-node-tag="H3" data-node-context="Architecture component">
+          <title>Reconcile · reconcile.py · Architecture component · H3</title>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="200" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 206) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Reconcile</text>
+        <text data-detail="context" x="385" y="244" class="t-muted" font-size="12" text-anchor="middle">reconcile.py</text>
+        
+        </g>
+
+        <g id="d1-node-quar" data-node-id="quar" data-node-label="quarantine" aria-label="Focus quarantine, rule + raw values, Architecture component" data-node-kind="database" data-node-sublabel="rule + raw values" data-node-context="Architecture component">
+          <title>quarantine · rule + raw values · Architecture component</title>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="200" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(576 206) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">quarantine</text>
+        <text data-detail="context" x="655" y="244" class="t-muted" font-size="12" text-anchor="middle">rule + raw values</text>
+        </g>
+
+        <g id="d1-node-silver" data-node-id="silver" data-node-label="Silver step" aria-label="Focus Silver step, run_silver.py, Architecture component" data-node-kind="backend" data-node-sublabel="run_silver.py" data-node-tag="H1" data-node-context="Architecture component">
+          <title>Silver step · run_silver.py · Architecture component · H1</title>
+          <rect x="840" y="200" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="200" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(846 206) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="228" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Silver step</text>
+        <text data-detail="context" x="925" y="244" class="t-muted" font-size="12" text-anchor="middle">run_silver.py</text>
+        
+        </g>
+
+        <g id="d1-node-staging" data-node-id="staging" data-node-label="staging schema" aria-label="Focus staging schema, trips_clean, Architecture component" data-node-kind="database" data-node-sublabel="trips_clean" data-node-context="Architecture component">
+          <title>staging schema · trips_clean · Architecture component</title>
+          <rect x="840" y="360" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="360" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(846 366) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="388" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">staging schema</text>
+        <text data-detail="context" x="925" y="404" class="t-muted" font-size="12" text-anchor="middle">trips_clean</text>
+        </g>
+
+        <g id="d1-node-dash" data-node-id="dash" data-node-label="Streamlit" aria-label="Focus Streamlit, dashboard/app.py, Architecture component" data-node-kind="frontend" data-node-sublabel="dashboard/app.py" data-node-context="Architecture component">
+          <title>Streamlit · dashboard/app.py · Architecture component</title>
+          <rect x="300" y="520" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="300" y="520" width="170" height="60" rx="6" class="c-frontend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(306 526) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="385" y="548" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Streamlit</text>
+        <text data-detail="context" x="385" y="564" class="t-muted" font-size="12" text-anchor="middle">dashboard/app.py</text>
+        </g>
+
+        <g id="d1-node-gold" data-node-id="gold" data-node-label="analytics schema" aria-label="Focus analytics schema, star + 3 marts, Architecture component" data-node-kind="database" data-node-sublabel="star + 3 marts" data-node-context="Architecture component">
+          <title>analytics schema · star + 3 marts · Architecture component</title>
+          <rect x="570" y="520" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="570" y="520" width="170" height="60" rx="6" class="c-database" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(576 526) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="655" y="548" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">analytics schema</text>
+        <text data-detail="context" x="655" y="564" class="t-muted" font-size="12" text-anchor="middle">star + 3 marts</text>
+        </g>
+
+        <g id="d1-node-dbt" data-node-id="dbt" data-node-label="dbt project" aria-label="Focus dbt project, snapshot, models, Architecture component" data-node-kind="backend" data-node-sublabel="snapshot, models" data-node-tag="H2" data-node-context="Architecture component">
+          <title>dbt project · snapshot, models · Architecture component · H2</title>
+          <rect x="840" y="520" width="170" height="60" rx="6" class="c-mask"/>
+          <rect x="840" y="520" width="170" height="60" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(846 526) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="925" y="548" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">dbt project</text>
+        <text data-detail="context" x="925" y="564" class="t-muted" font-size="12" text-anchor="middle">snapshot, models</text>
+        
+        </g>
+
+        <!-- Connection labels -->
+        <g data-detail="context" data-edge-from="gen" data-edge-to="files" data-edge-label="1 writes" data-edge-key="0" data-edge-id="c1">
+          <rect x="216.0" y="47.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="250" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">1 writes</text>
+        </g>
+        <g data-detail="context" data-edge-from="files" data-edge-to="bronze" data-edge-label="2 COPY" data-edge-key="1" data-edge-id="c2">
+          <rect x="493.0" y="47.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">2 COPY</text>
+        </g>
+        <g data-detail="context" data-edge-from="bronze" data-edge-to="raw" data-edge-label="3 replace file" data-edge-key="2" data-edge-id="c3">
+          <rect x="735.0" y="47.0" width="110.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="60" class="t-edge-emphasis" font-size="12" text-anchor="middle">3 replace file</text>
+        </g>
+        <g data-detail="context" data-edge-from="raw" data-edge-to="silver" data-edge-label="4 reads" data-edge-key="3" data-edge-id="c4">
+          <rect x="866.7" y="140.0" width="61.0" height="18" rx="3" class="c-mask"/>
+          <text x="897.2" y="153" class="t-edge-emphasis" font-size="12" text-anchor="middle">4 reads</text>
+        </g>
+        <g data-detail="context" data-edge-from="silver" data-edge-to="quar" data-edge-label="5 rejects" data-edge-key="4" data-edge-id="c5">
+          <rect x="752.5" y="207.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="220" class="t-edge-dashed" font-size="12" text-anchor="middle">5 rejects</text>
+        </g>
+        <g data-detail="context" data-edge-from="silver" data-edge-to="staging" data-edge-label="6 upsert" data-edge-key="5" data-edge-id="c6">
+          <rect x="860.8" y="300.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="894.8" y="313" class="t-edge-emphasis" font-size="12" text-anchor="middle">6 upsert</text>
+        </g>
+        <g data-detail="context" data-edge-from="staging" data-edge-to="dbt" data-edge-label="7 source" data-edge-key="6" data-edge-id="c7">
+          <rect x="860.8" y="460.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="894.8" y="473" class="t-edge-emphasis" font-size="12" text-anchor="middle">7 source</text>
+        </g>
+        <g data-detail="context" data-edge-from="dbt" data-edge-to="gold" data-edge-label="8 builds" data-edge-key="7" data-edge-id="c8">
+          <rect x="756.0" y="527.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="790" y="540" class="t-edge-emphasis" font-size="12" text-anchor="middle">8 builds</text>
+        </g>
+        <g data-detail="context" data-edge-from="gold" data-edge-to="dash" data-edge-label="9 SQL" data-edge-key="8" data-edge-id="c9">
+          <rect x="496.5" y="527.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="540" class="t-edge-default" font-size="12" text-anchor="middle">9 SQL</text>
+        </g>
+        <g data-detail="context" data-edge-from="recon" data-edge-to="quar" data-edge-label="R2 counts" data-edge-key="9" data-edge-id="c10">
+          <rect x="482.5" y="207.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="520" y="220" class="t-edge-default" font-size="12" text-anchor="middle">R2 counts</text>
+        </g>
+        <g data-detail="context" data-edge-from="recon" data-edge-to="files" data-edge-label="R1 manifest" data-edge-key="10" data-edge-id="c11">
+          <rect x="340.5" y="177.0" width="89.0" height="18" rx="3" class="c-mask"/>
+          <text x="385" y="190" class="t-edge-default" font-size="12" text-anchor="middle">R1 manifest</text>
+        </g>
+        <g data-detail="context" data-edge-from="airflow" data-edge-to="gen" data-edge-label="schedules" data-edge-key="11" data-edge-id="c12">
+          <rect x="77.5" y="177.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="115" y="190" class="t-edge-dashed" font-size="12" text-anchor="middle">schedules</text>
+        </g>
+
+        <!-- Boundary labels (foreground masks keep routes out of titles) -->
+
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="40" y="612" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="Frontend" data-legend-x="40" data-legend-baseline="632" data-legend-width="83">
+            <rect x="40" y="623" width="16" height="10" rx="2.5" class="c-frontend" stroke-width="1"/>
+            <text x="62" y="632" class="t-muted" font-size="12" font-weight="500">Frontend</text>
+          </g>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="145" data-legend-baseline="632" data-legend-width="78">
+            <rect x="145" y="623" width="16" height="10" rx="2.5" class="c-backend" stroke-width="1"/>
+            <text x="167" y="632" class="t-muted" font-size="12" font-weight="500">Backend</text>
+          </g>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="245" data-legend-baseline="632" data-legend-width="83">
+            <rect x="245" y="623" width="16" height="10" rx="2.5" class="c-database" stroke-width="1"/>
+            <text x="267" y="632" class="t-muted" font-size="12" font-weight="500">Database</text>
+          </g>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="350" data-legend-baseline="632" data-legend-width="83">
+            <rect x="350" y="623" width="16" height="10" rx="2.5" class="c-external" stroke-width="1"/>
+            <text x="372" y="632" class="t-muted" font-size="12" font-weight="500">External</text>
+          </g>
+        </g>
+      </svg></div></div></section><section class="block" aria-labelledby="b-how"><h2 id="b-how" class="split">How it works</h2><div><ol class="steps"><li><div><b>Generate</b><p>A seeded generator writes daily trips, makes 7% dirty in 12 ways and records a defect manifest.</p></div></li><li><div><b>Load bronze</b><p>Header check, PostgreSQL COPY into text columns, replace that file&#x27;s rows, verify row counts.</p></div></li><li><div><b>Validate silver</b><p>Fix spellings, apply the rules, quarantine bad rows, upsert clean rows where newest updated_at wins.</p></div></li><li><div><b>Build gold</b><p>dbt snapshots drivers, builds dimensions, an incremental fact watermarked on loaded_at, and KPI marts.</p></div></li><li><div><b>Test and reconcile</b><p>50 dbt tests run, then reconcile matches every injected defect type to quarantine counts.</p></div></li><li><div><b>Orchestrate</b><p>A 10-task Airflow DAG runs daily with 2 retries and writes failures to an alerts table.</p></div></li></ol></div></section><section class="block wide" aria-label="Flow diagram"><div class="dia-wrap" tabindex="0" role="region" aria-label="Step-by-step flow diagram, scrolls sideways on small screens"><svg class="dia" focusable="false" style="--w:1062px" viewBox="4 22 1062 567" data-layout-contract="readable-v2" role="img" lang="en" aria-labelledby="d2-archify-diagram-title d2-archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+        <title id="d2-archify-diagram-title">One daily HaulPulse run</title>
+        <desc id="d2-archify-diagram-description">Daily DAG: 2 Generate, 4 Load bronze, 5 Validate, then dbt 7 Snapshot, 8 Build models, 9 Test, and 10 Record run. A failed task goes to Retry and runs again, at most twice.</desc>
+        <!-- Definitions -->
+        <defs>
+          <marker id="d2-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default" />
+          </marker>
+          <marker id="d2-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis" />
+          </marker>
+          <marker id="d2-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security" />
+          </marker>
+          <marker id="d2-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed" />
+          </marker>
+          <pattern id="d2-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Background Grid -->
+        
+
+        <!-- Swimlanes -->
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="998" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="74" class="t-dim" font-size="12" font-weight="600">01 / Generator</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="176" width="998" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="198" class="t-dim" font-size="12" font-weight="600">02 / Python pipeline</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="300" width="998" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="322" class="t-dim" font-size="12" font-weight="600">03 / dbt</text>
+
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="424" width="998" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-3-exception" x="46" y="430" width="986" height="92" rx="8" class="c-security-group" stroke-width="1"/>
+        <text x="54" y="446" class="t-security" font-size="12" font-weight="600">EX / On failure</text>
+
+        <!-- Phase headers -->
+
+
+        <!-- Workflow groups -->
+
+
+        <!-- Edge paths -->
+        <path data-edge-from="gen" data-edge-to="bronze" data-edge-label="files" data-edge-key="0" data-edge-id="e1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="198,119;243,119;243,217" d="M 198 119 L 243 119 L 243 217" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="bronze" data-edge-to="silver" data-edge-label="raw rows" data-edge-key="1" data-edge-id="e2" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="318,243;374.4,243" d="M 318 243 L 374.4 243" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="silver" data-edge-to="snap" data-edge-label="clean rows" data-edge-key="2" data-edge-id="e3" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="449.4,269;449.4,290;569.4,290;569.4,341" d="M 449.4 269 L 449.4 290 L 569.4 290 L 569.4 341" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="snap" data-edge-to="run" data-edge-label="SCD2" data-edge-key="3" data-edge-id="e4" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="644.4,367;682.4,367" d="M 644.4 367 L 682.4 367" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="run" data-edge-to="test" data-edge-label="tables" data-edge-key="4" data-edge-id="e5" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="832.4,367;879.2,367" d="M 832.4 367 L 879.2 367" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="test" data-edge-to="record" data-edge-label="audit" data-edge-key="5" data-edge-id="e6" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="954.2,341;954.2,269" d="M 954.2 341 L 954.2 269" class="a-emphasis" stroke-width="1.8" marker-end="url(#d2-arrowhead-emphasis)"/>
+        <path data-edge-from="silver" data-edge-to="retry" data-edge-label="task fails" data-edge-key="6" data-edge-id="e7" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="437.4,269;437.4,352;358.4,352;358.4,491;374.4,491" d="M 437.4 269 L 437.4 352 L 358.4 352 L 358.4 491 L 374.4 491" class="a-security" stroke-width="1.4" marker-end="url(#d2-arrowhead-security)"/>
+        <path data-edge-from="retry" data-edge-to="silver" data-edge-label="run again" data-edge-key="7" data-edge-id="e8" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="524.4,491;1050,491;1050,201;449.4,201;449.4,217" d="M 524.4 491 L 1050 491 L 1050 201 L 449.4 201 L 449.4 217" class="a-dashed" stroke-width="1.4" marker-end="url(#d2-arrowhead-dashed)"/>
+
+        <!-- Nodes -->
+        <g id="d2-node-gen" data-node-id="gen" data-node-label="2 Generate" aria-label="Focus 2 Generate, generate_source, Generator" data-node-kind="backend" data-node-sublabel="generate_source" data-node-context="Generator">
+          <title>2 Generate · generate_source · Generator</title>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="48" y="93" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(54 99) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="123" y="114" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">2 Generate</text>
+          <text data-detail="context" x="123" y="131" class="t-muted" font-size="12" text-anchor="middle">generate_source</text>
+        </g>
+
+        <g id="d2-node-bronze" data-node-id="bronze" data-node-label="4 Load bronze" aria-label="Focus 4 Load bronze, load_bronze, Python pipeline" data-node-kind="backend" data-node-sublabel="load_bronze" data-node-context="Python pipeline">
+          <title>4 Load bronze · load_bronze · Python pipeline</title>
+          <rect x="168" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="168" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(174 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="243" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">4 Load bronze</text>
+          <text data-detail="context" x="243" y="255" class="t-muted" font-size="12" text-anchor="middle">load_bronze</text>
+        </g>
+
+        <g id="d2-node-silver" data-node-id="silver" data-node-label="5 Validate" aria-label="Focus 5 Validate, validate_silver, Python pipeline" data-node-kind="security" data-node-sublabel="validate_silver" data-node-context="Python pipeline">
+          <title>5 Validate · validate_silver · Python pipeline</title>
+          <rect x="374.4" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="374.4" y="217" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(380.4 223) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="449.4" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">5 Validate</text>
+          <text data-detail="context" x="449.4" y="255" class="t-muted" font-size="12" text-anchor="middle">validate_silver</text>
+        </g>
+
+        <g id="d2-node-record" data-node-id="record" data-node-label="10 Record run" aria-label="Focus 10 Record run, record_run, Python pipeline" data-node-kind="backend" data-node-sublabel="record_run" data-node-context="Python pipeline">
+          <title>10 Record run · record_run · Python pipeline</title>
+          <rect x="879.2" y="217" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="879.2" y="217" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(885.2 223) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="954.2" y="238" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">10 Record run</text>
+          <text data-detail="context" x="954.2" y="255" class="t-muted" font-size="12" text-anchor="middle">record_run</text>
+        </g>
+
+        <g id="d2-node-snap" data-node-id="snap" data-node-label="7 Snapshot" aria-label="Focus 7 Snapshot, dbt snapshot, dbt" data-node-kind="backend" data-node-sublabel="dbt snapshot" data-node-context="dbt">
+          <title>7 Snapshot · dbt snapshot · dbt</title>
+          <rect x="494.4" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="494.4" y="341" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(500.4 347) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="569.4" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">7 Snapshot</text>
+          <text data-detail="context" x="569.4" y="379" class="t-muted" font-size="12" text-anchor="middle">dbt snapshot</text>
+        </g>
+
+        <g id="d2-node-run" data-node-id="run" data-node-label="8 Build models" aria-label="Focus 8 Build models, dbt run, dbt" data-node-kind="backend" data-node-sublabel="dbt run" data-node-context="dbt">
+          <title>8 Build models · dbt run · dbt</title>
+          <rect x="682.4" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="682.4" y="341" width="150" height="52" rx="6" class="c-backend" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(688.4 347) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="757.4" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">8 Build models</text>
+          <text data-detail="context" x="757.4" y="379" class="t-muted" font-size="12" text-anchor="middle">dbt run</text>
+        </g>
+
+        <g id="d2-node-test" data-node-id="test" data-node-label="9 Test" aria-label="Focus 9 Test, dbt test, dbt" data-node-kind="security" data-node-sublabel="dbt test" data-node-context="dbt">
+          <title>9 Test · dbt test · dbt</title>
+          <rect x="879.2" y="341" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="879.2" y="341" width="150" height="52" rx="6" class="c-security" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(885.2 347) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="954.2" y="362" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">9 Test</text>
+          <text data-detail="context" x="954.2" y="379" class="t-muted" font-size="12" text-anchor="middle">dbt test</text>
+        </g>
+
+        <g id="d2-node-retry" data-node-id="retry" data-node-label="Retry" aria-label="Focus Retry, 2 tries, 1 min, On failure" data-node-kind="messagebus" data-node-sublabel="2 tries, 1 min" data-node-context="On failure">
+          <title>Retry · 2 tries, 1 min · On failure</title>
+          <rect x="374.4" y="465" width="150" height="52" rx="6" class="c-mask"/>
+          <rect x="374.4" y="465" width="150" height="52" rx="6" class="c-messagebus" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(380.4 471) scale(0.6875)">
+            <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
+            <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
+            <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
+            <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="449.4" y="486" class="t-primary" font-size="14" font-weight="600" text-anchor="middle">Retry</text>
+          <text data-detail="context" x="449.4" y="503" class="t-muted" font-size="12" text-anchor="middle">2 tries, 1 min</text>
+        </g>
+
+        <!-- Edge labels -->
+        <g data-detail="context" data-edge-from="gen" data-edge-to="bronze" data-edge-label="files" data-edge-key="0" data-edge-id="e1">
+          <rect x="197.0" y="96.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="220.5" y="109" class="t-edge-emphasis" font-size="12" text-anchor="middle">files</text>
+        </g>
+        <g data-detail="context" data-edge-from="bronze" data-edge-to="silver" data-edge-label="raw rows" data-edge-key="1" data-edge-id="e2">
+          <rect x="312.2" y="220.0" width="68.0" height="18" rx="3" class="c-mask"/>
+          <text x="346.2" y="233" class="t-edge-emphasis" font-size="12" text-anchor="middle">raw rows</text>
+        </g>
+        <g data-detail="context" data-edge-from="silver" data-edge-to="snap" data-edge-label="clean rows" data-edge-key="2" data-edge-id="e3">
+          <rect x="468.4" y="267.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="509.4" y="280" class="t-edge-emphasis" font-size="12" text-anchor="middle">clean rows</text>
+        </g>
+        <g data-detail="context" data-edge-from="snap" data-edge-to="run" data-edge-label="SCD2" data-edge-key="3" data-edge-id="e4">
+          <rect x="643.4" y="344.0" width="40.0" height="18" rx="3" class="c-mask"/>
+          <text x="663.4" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">SCD2</text>
+        </g>
+        <g data-detail="context" data-edge-from="run" data-edge-to="test" data-edge-label="tables" data-edge-key="4" data-edge-id="e5">
+          <rect x="828.8" y="344.0" width="54.0" height="18" rx="3" class="c-mask"/>
+          <text x="855.8" y="357" class="t-edge-emphasis" font-size="12" text-anchor="middle">tables</text>
+        </g>
+        <g data-detail="context" data-edge-from="test" data-edge-to="record" data-edge-label="audit" data-edge-key="5" data-edge-id="e6">
+          <rect x="930.7" y="292.0" width="47.0" height="18" rx="3" class="c-mask"/>
+          <text x="954.2" y="305" class="t-edge-emphasis" font-size="12" text-anchor="middle">audit</text>
+        </g>
+        <g data-detail="context" data-edge-from="silver" data-edge-to="retry" data-edge-label="task fails" data-edge-key="6" data-edge-id="e7">
+          <rect x="356.9" y="329.0" width="82.0" height="18" rx="3" class="c-mask"/>
+          <text x="397.9" y="342" class="t-edge-security" font-size="12" text-anchor="middle">task fails</text>
+        </g>
+        <g data-detail="context" data-edge-from="retry" data-edge-to="silver" data-edge-label="run again" data-edge-key="7" data-edge-id="e8">
+          <rect x="712.2" y="178.0" width="75.0" height="18" rx="3" class="c-mask"/>
+          <text x="749.7" y="191" class="t-edge-dashed" font-size="12" text-anchor="middle">run again</text>
+        </g>
+
+        <!-- Legend -->
+        <g data-legend="" data-legend-bridge="">
+          <text x="20" y="552" class="t-primary" font-size="14" font-weight="650">Legend</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Agent logic" data-legend-x="20" data-legend-baseline="572" data-legend-width="91">
+            <rect x="20" y="564" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="42" y="572" class="t-muted" font-size="12" font-weight="500">Agent logic</text>
+          </g>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Policy" data-legend-x="118" data-legend-baseline="572" data-legend-width="70">
+            <rect x="118" y="564" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="140" y="572" class="t-muted" font-size="12" font-weight="500">Policy</text>
+          </g>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Tool action" data-legend-x="195" data-legend-baseline="572" data-legend-width="91">
+            <rect x="195" y="564" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
+            <text x="217" y="572" class="t-muted" font-size="12" font-weight="500">Tool action</text>
+          </g>
+        </g>
+      </svg></div></section><section class="block" aria-labelledby="b-res"><h2 id="b-res" class="split">Results</h2><div><dl class="results"><div><dt>injected defect types caught by reconciliation</dt><dd>12 / 12</dd></div><div><dt>dbt tests passed in a local dbt build on PostgreSQL 16</dt><dd>50 / 50</dd></div><div><dt>city-week revenue query after a composite B-tree index, 1M-row fact</dt><dd>54.6 to 3.6 ms</dd></div><div><dt>line coverage of the validation module</dt><dd>98%</dd></div></dl></div></section><section class="block" aria-labelledby="b-why"><h2 id="b-why" class="split">Design decisions</h2><div><ul class="bullets"><li>Watermark on load time, not trip time, so backfilled late corrections are never skipped.</li><li>Every step is idempotent, so re-running a file or a day never duplicates data.</li><li>Indexes measured on 1M rows; partitioning was measured and deferred to about 10x volume.</li></ul></div></section><section class="block wide" aria-labelledby="b-shots"><h2 id="b-shots" class="split">Screens</h2><div class="shots"><figure><img src="/assets/img/haulpulse-1-800.10cda8b003.webp" srcset="/assets/img/haulpulse-1-800.10cda8b003.webp 800w, /assets/img/haulpulse-1.c8e7ff5c9a.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="726" alt="HaulPulse Streamlit dashboard: 1,016,578 trips, 86.7% completed, on-time, cancellation and no-driver rates, with daily trips and daily revenue charts" loading="lazy"><figcaption>HaulPulse Streamlit dashboard.</figcaption></figure><figure><img src="/assets/img/haulpulse-2-800.03171f0c43.webp" srcset="/assets/img/haulpulse-2-800.03171f0c43.webp 800w, /assets/img/haulpulse-2.dceb0b0d78.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="730" alt="Airflow haulpulse_daily DAG: a run history grid of green tasks and the task graph from apply_ddl through load_bronze, validate_silver and the dbt seed, snapshot, run and test steps" loading="lazy"><figcaption>Airflow haulpulse_daily DAG.</figcaption></figure><figure><img src="/assets/img/haulpulse-3-800.15d06601c6.webp" srcset="/assets/img/haulpulse-3-800.15d06601c6.webp 800w, /assets/img/haulpulse-3.787a07d8ce.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="686" alt="dbt lineage graph: cleaned silver tables feed staging models, driver, city, vehicle and date dimensions, the trips fact table, marts and data tests" loading="lazy"><figcaption>Dbt lineage graph.</figcaption></figure><figure><img src="/assets/img/haulpulse-4-800.70948199b1.webp" srcset="/assets/img/haulpulse-4-800.70948199b1.webp 742w, /assets/img/haulpulse-4.70948199b1.webp 742w" sizes="(max-width: 767px) 92vw, 45vw" width="742" height="394" alt="Reconciliation report in a terminal: for 12 injected defect types the injected count matches the detected count; 52,788 of 1,079,504 rows rejected (4.9%)" loading="lazy"><figcaption>Reconciliation report in a terminal.</figcaption></figure><figure><img src="/assets/img/haulpulse-5-800.9c1edf7e82.webp" srcset="/assets/img/haulpulse-5-800.9c1edf7e82.webp 800w, /assets/img/haulpulse-5.153e615ef1.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="842" alt="DBeaver query on the driver dimension: one driver has two history rows, Mumbai then Ahmedabad, with valid_from and valid_to dates (slowly changing dimension type 2)" loading="lazy"><figcaption>DBeaver query on the driver dimension.</figcaption></figure><figure><img src="/assets/img/haulpulse-6-800.d42c17215a.webp" srcset="/assets/img/haulpulse-6-800.d42c17215a.webp 800w, /assets/img/haulpulse-6.cf663e789c.webp 1600w" sizes="(max-width: 767px) 92vw, 45vw" width="1600" height="639" alt="Data quality scorecard: rows validated, quarantined and auto-corrected, and a daily rejection rate that stays under the 8% alert line" loading="lazy"><figcaption>Data quality scorecard.</figcaption></figure></div></section><section class="block" aria-labelledby="b-stack"><h2 id="b-stack" class="split">Stack</h2><div><ul class="tags"><li>Python</li><li>PostgreSQL</li><li>dbt</li><li>Apache Airflow</li><li>pandas</li><li>SQLAlchemy</li><li>Streamlit</li><li>Plotly</li><li>pytest</li><li>GitHub Actions</li></ul><div class="case-cta"><a class="btn btn--solid magnetic" href="https://github.com/rawatneelmayank1-sire/haulpulse" data-repo="haulpulse">Open the repository<span class="disc" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span></a></div></div></section>
+    <a class="next" href="/work/url-shortener/" data-case-link><small>Next project</small><b>URL shortener</b><span class="link">Read the case study <i class="ph ph-arrow-right" aria-hidden="true"></i></span></a>
+  </div>
+</main>
+<footer class="wrap"><div class="foot"><span>Neelmayank Rawat. B.Tech in Computer Science and Engineering, RCOEM Nagpur, 2023 to 2027.</span>
+<span><a href="https://github.com/rawatneelmayank1-sire" data-link="github">GitHub</a> &nbsp; <a href="https://www.linkedin.com/in/neelmayank-rawat-028886355/" data-link="linkedin">LinkedIn</a></span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/SplitText.min.js" defer></script><script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js" defer></script>
+<script src="/assets/js/site.2656d6d058.js" defer></script>
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }</script>
+<script type="module">import { createField } from '/assets/js/field.645b8db74f.js';
+const host = document.querySelector('.case-head'), cv = host && host.querySelector('canvas');
+try { if (cv) { window.NR = window.NR || {}; NR.field = await createField({ canvas: cv, mode: 'single', shape: cv.dataset.shape, side: 'right', host }); } }
+catch (e) { document.documentElement.classList.add('no-gl'); }</script>
+</body>
+</html>
